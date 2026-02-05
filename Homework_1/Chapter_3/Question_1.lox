@@ -42,7 +42,7 @@ class ChaseAccount < BankAccount {
 
     if (amount <= this.balance) {
       this.balance = this.balance - amount;
-      print "Zelle to " + target_person + "successfully sent!";
+      print "Zelle to " + target_person + " successfully sent!";
       return this.balance;
     }
     else {
@@ -70,7 +70,7 @@ print accountTwo.withdraw(25);
 print "";
 
 print "Bob's Chase Account";
-var accountTwo = BankAccount("Bob Doe");
-print accountTwo.deposit(50);
-print accountTwo.zelle(25, "Test User");
-print accountTwo.checkBalance();
+var accountThree = ChaseAccount("Bob Doe");
+print accountThree.deposit(50);
+print accountThree.zelle(25, "Test User");
+print accountThree.checkBalance();
