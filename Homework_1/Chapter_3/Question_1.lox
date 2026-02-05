@@ -1,1 +1,39 @@
-print "hi";
+class BankAccount {
+  init(owner) {
+    // no access modifier functionality
+    this.owner = owner;
+    this.balance = 0;
+  }
+
+  validate(amount) {
+    if (amount <= 0) {
+      return "Amount must be greater than 0!";
+    }
+  }
+
+  deposit(amount) {
+    this.validate(amount);
+
+    this.balance = this.balance + amount;
+    // no string formatting or interpolation feature
+    return "Deposited" + amount + ", your available balance is now: " + this.balance + ".";
+  }
+
+  withdraw(amount) {
+    this.validate(amount);
+
+    if (amount <= this.balance) {
+      this.balance = this.balance - amount;
+    }
+    else {
+      return "Insufficient funds!";
+    }
+  }
+
+  checkBalance() {
+    return "Your available balance is: " + this.balance + ".";
+  }
+}
+
+var accountOne = BankAccount("Larry La");
+print(accountOne.deposit(0));
