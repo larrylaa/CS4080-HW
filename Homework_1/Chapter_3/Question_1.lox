@@ -5,25 +5,24 @@ class BankAccount {
     this.balance = 0;
   }
 
-  validate(amount) {
+  deposit(amount) {
     if (amount <= 0) {
       return "Amount must be greater than 0!";
     }
-  }
-
-  deposit(amount) {
-    this.validate(amount);
 
     this.balance = this.balance + amount;
-    // no string formatting or interpolation feature
-    return "Deposited" + amount + ", your available balance is now: " + this.balance + ".";
+    // no string formatting or interpolation feature so we can't embed it in the string
+    return this.balance;
   }
 
   withdraw(amount) {
-    this.validate(amount);
+    if (amount <= 0) {
+      return "Amount must be greater than 0!";
+    }
 
     if (amount <= this.balance) {
       this.balance = this.balance - amount;
+      return this.balance;
     }
     else {
       return "Insufficient funds!";
@@ -31,9 +30,47 @@ class BankAccount {
   }
 
   checkBalance() {
-    return "Your available balance is: " + this.balance + ".";
+    return this.balance;
   }
 }
 
+class ChaseAccount < BankAccount {
+  zelle(amount, target_person) {
+    if (amount <= 0) {
+      return "Amount must be greater than 0!";
+    }
+
+    if (amount <= this.balance) {
+      this.balance = this.balance - amount;
+      print "Zelle to " + target_person + "successfully sent!";
+      return this.balance;
+    }
+    else {
+      return "Insufficient funds!";
+    }
+  }
+}
+
+print "Larry's Account";
 var accountOne = BankAccount("Larry La");
-print(accountOne.deposit(0));
+print accountOne.deposit(0);
+print accountOne.deposit(100);
+print accountOne.withdraw(50);
+print accountOne.checkBalance();
+
+print "";
+
+print "John's Account";
+var accountTwo = BankAccount("John Doe");
+print accountTwo.withdraw(100);
+print accountTwo.deposit(50);
+print accountTwo.checkBalance();
+print accountTwo.withdraw(25);
+
+print "";
+
+print "Bob's Chase Account";
+var accountTwo = BankAccount("Bob Doe");
+print accountTwo.deposit(50);
+print accountTwo.zelle(25, "Test User");
+print accountTwo.checkBalance();
