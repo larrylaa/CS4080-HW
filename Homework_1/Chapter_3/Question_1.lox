@@ -1,3 +1,4 @@
+// LARRY LA - CS 4080 - HW 1
 class BankAccount {
   init(owner) {
     // no access modifier functionality
@@ -74,3 +75,22 @@ var accountThree = ChaseAccount("Bob Doe");
 print accountThree.deposit(50);
 print accountThree.zelle(25, "Test User");
 print accountThree.checkBalance();
+
+// OUTPUT:
+// Larry's Account
+// Amount must be greater than 0!
+// 100
+// 50
+// 50
+
+// John's Account
+// Insufficient funds!
+// 50
+// 50
+// 25
+
+// Bob's Chase Account
+// 50
+// Zelle to Test User successfully sent!
+// 25
+// 25

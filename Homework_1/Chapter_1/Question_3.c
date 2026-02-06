@@ -1,3 +1,4 @@
+// LARRY LA - CS 4080 - HW 1
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -63,7 +64,21 @@ int main() {
     insert(&head, "6");
     insert(&head, "7");
 
+    struct Node* found = find(head, "6");
+    if (found != NULL) {
+        printf("Found node with data: %s\n", found->data);
+    } else {
+        printf("Node with data '6' not found.\n");
+    }
+
     delete(&head, "6");
+
+    found = find(head, "6");
+    if (found != NULL) {
+        printf("Found node with data: %s\n", found->data);
+    } else {
+        printf("Node with data '6' not found after deletion.\n");
+    }
 
     struct Node* curr = head;
     while (curr != NULL) {
@@ -74,3 +89,8 @@ int main() {
 
     return 0;
 }
+
+// OUTPUT:
+// Found node with data: 6
+// Node with data '6' not found after deletion.
+// 7 5 

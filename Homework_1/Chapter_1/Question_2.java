@@ -1,3 +1,4 @@
+// LARRY LA - CS 4080 - HW 1
 package Homework_1.Chapter_1;
 
 public class Question_2 {
@@ -5,3 +6,6 @@ public class Question_2 {
         System.out.println("Hello, world!");
     }
 }
+
+// OUTPUT
+// Hello, world!
