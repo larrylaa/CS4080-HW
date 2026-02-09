@@ -1,0 +1,9 @@
+{
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "files.exclude": {},
+  "java.project.sourcePaths": [],
+  "java.compile.isExcludedFile": [
+    "**/Homework_2/Chapter_4/Question_4/Scanner.java"
+  ]
+}
