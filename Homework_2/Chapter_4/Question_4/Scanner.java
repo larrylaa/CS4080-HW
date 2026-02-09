@@ -6,7 +6,7 @@ to add support to Lox’s scanner for C-style block comments as requested in cha
 
 See lines 90-100, and 125-149 for the code solution.
 
-NOTE: Running from here won't work, if you would like to run the code, please use the book directory in this repo.
+NOTE: Running from here won't work, if you would like to run the code, please use the Lox.java in the book directory.
 */
 
 package com.craftinginterpreters.lox;

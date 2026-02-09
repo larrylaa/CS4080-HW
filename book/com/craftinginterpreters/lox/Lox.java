@@ -49,6 +49,24 @@ public class Lox {
         for (Token token : tokens) {
             System.out.println(token);
         }
+
+        // RPN TEST: (1 + 2) * (4 - 3)
+        Expr expression = new Expr.Binary(
+            new Expr.Binary(
+                new Expr.Literal(1),
+                new Token(TokenType.PLUS, "+", null, 1),
+                new Expr.Literal(2)
+            ),
+            new Token(TokenType.STAR, "*", null, 1),
+            new Expr.Binary(
+                new Expr.Literal(4),
+                new Token(TokenType.MINUS, "-", null, 1),
+                new Expr.Literal(3)
+            )
+        );
+
+        System.out.println("RPN Output: " + new RpnPrinter().print(expression));
+        // RPN Output: 1 2 + 4 3 - *
     }
 
     static void error(int line, String message) {

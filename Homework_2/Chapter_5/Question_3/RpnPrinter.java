@@ -1,0 +1,43 @@
+// LARRY LA - CS 4080 - HW 2
+
+/* 
+The code below for challenge question 3.
+
+RPN Output: 1 2 + 4 3 - *
+
+NOTE: Running from here won't work, if you would like to run the code, please use the Lox.java in the book directory.
+*/
+
+package com.craftinginterpreters.lox;
+
+class RpnPrinter implements Expr.Visitor<String> {
+    String print(Expr expr) {
+        return expr.accept(this);
+    }
+
+    @Override
+    public String visitBinaryExpr(Expr.Binary expr) {
+        // In RPN: left, right, operator
+        return expr.left.accept(this) + " " + 
+               expr.right.accept(this) + " " + 
+               expr.operator.lexeme;
+    }
+
+    @Override
+    public String visitGroupingExpr(Expr.Grouping expr) {
+        // Parentheses don't exist in RPN; just visit the inner expression
+        return expr.expression.accept(this);
+    }
+
+    @Override
+    public String visitLiteralExpr(Expr.Literal expr) {
+        if (expr.value == null) return "nil";
+        return expr.value.toString();
+    }
+
+    @Override
+    public String visitUnaryExpr(Expr.Unary expr) {
+        // For unary, the operand comes before the operator (e.g., "123 -")
+        return expr.right.accept(this) + " " + expr.operator.lexeme;
+    }
+}
