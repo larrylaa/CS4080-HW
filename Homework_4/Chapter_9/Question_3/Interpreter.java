@@ -1,8 +1,10 @@
 // LARRY LA - CS 4080 - HW 4
 
 /* 
-Ch.8 Q1: Made evaluate() and stringify() methods public (lines 188, 202)
-Needed for REPL to access these methods
+Ch.9 Q3: Added break statement execution using exceptions
+See lines 6, 191-210
+
+Break throws BreakException to exit loops
 */
 
 package com.craftinginterpreters.lox;
@@ -10,6 +12,8 @@ package com.craftinginterpreters.lox;
 import java.util.List;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
+  private static class BreakException extends RuntimeException {}
+  
   private Environment environment = new Environment();
 
   void interpret(List<Stmt> statements) {
@@ -59,11 +63,12 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
   @Override
   public Void visitVarStmt(Stmt.Var stmt) {
-    Object value = null;
     if (stmt.initializer != null) {
-      value = evaluate(stmt.initializer);
+      Object value = evaluate(stmt.initializer);
+      environment.define(stmt.name.lexeme, value);
+    } else {
+      environment.defineUninitialized(stmt.name.lexeme);
     }
-    environment.define(stmt.name.lexeme, value);
     return null;
   }
 
@@ -165,6 +170,46 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     // Unreachable.
     return null;
+  }
+
+  @Override
+  public Void visitIfStmt(Stmt.If stmt) {
+    if (isTruthy(evaluate(stmt.condition))) {
+      execute(stmt.thenBranch);
+    } else if (stmt.elseBranch != null) {
+      execute(stmt.elseBranch);
+    }
+    return null;
+  }
+
+  @Override
+  public Object visitLogicalExpr(Expr.Logical expr) {
+    Object left = evaluate(expr.left);
+
+    if (expr.operator.type == TokenType.OR) {
+      if (isTruthy(left)) return left;
+    } else {
+      if (!isTruthy(left)) return left;
+    }
+
+    return evaluate(expr.right);
+  }
+
+  @Override
+  public Void visitWhileStmt(Stmt.While stmt) {
+    try {
+      while (isTruthy(evaluate(stmt.condition))) {
+        execute(stmt.body);
+      }
+    } catch (BreakException ex) {
+      // Break statement executed - exit the loop
+    }
+    return null;
+  }
+
+  @Override
+  public Void visitBreakStmt(Stmt.Break stmt) {
+    throw new BreakException();
   }
 
   private void checkNumberOperand(Token operator, Object operand) {

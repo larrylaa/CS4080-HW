@@ -1,3 +1,12 @@
+// LARRY LA - CS 4080 - HW 4
+
+/* 
+Ch.9 Q3: Added break statement parsing with loop depth checking
+See lines 13, 46, 103-123, 139-148
+
+Prevents break outside loops with syntax error
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;
