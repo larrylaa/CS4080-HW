@@ -1,7 +1,7 @@
 // LARRY LA - CS 4080 - HW 3
 
 /* 
-The code below for Ch.7 challenge Question 3 (see Lines 89-92)
+The code below for Ch.7 challenge Question 3 (see Lines 99-102)
 
 Adds runtime error detection for division by zero. Before in Java, dividing a 
 double by 0.0 produces Infinity but I didn't want that behavior.

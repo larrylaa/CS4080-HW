@@ -1,7 +1,7 @@
 // LARRY LA - CS 4080 - HW 3
 
 /* 
-The code below for Ch.6 challenge Question 1 (see Lines 36-47)
+The code below for Ch.6 challenge Question 1 (see Lines 48-57)
 
 Adds support for comma expressions. In C, the comma operator evaluates the left operand 
 and discards the result, then evaluates and returns the right operand. It has the lowest 

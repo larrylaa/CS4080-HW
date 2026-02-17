@@ -1,7 +1,7 @@
 // LARRY LA - CS 4080 - HW 3
 
 /* 
-The code below for Ch.6 challenge Question 2 (see Lines 57-69)
+The code below for Ch.6 challenge Question 2 (see Lines 61-73)
 
 Adds support for the C-style conditional or "ternary" operator ?:.
 - The expression between ? and : allows any precedence level (calls expression()).

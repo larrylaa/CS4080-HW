@@ -1,7 +1,7 @@
 // LARRY LA - CS 4080 - HW 3
 
 /* 
-The code below for Ch.7 challenge Question 2 (see Lines 74-85)
+The code below for Ch.7 challenge Question 2 (see Lines 91-99)
 
 Extends the + operator such that if either operand is a string, the other is 
 converted to a string and the results are concatenated. For example:

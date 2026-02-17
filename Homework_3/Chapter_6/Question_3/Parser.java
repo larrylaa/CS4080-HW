@@ -1,7 +1,7 @@
 // LARRY LA - CS 4080 - HW 3
 
 /* 
-The code below for Ch.6 challenge Question 3 (see Lines 76-79, 91-94, 106-109, 121-124)
+The code below for Ch.6 challenge Question 3 (see Lines 73-76, 92-95, 111-114, 130-133)
 
 Adds error productions to handle each binary operator appearing without a left-hand operand.
 If a binary operator appears at the beginning of an expression, we report an error, 
