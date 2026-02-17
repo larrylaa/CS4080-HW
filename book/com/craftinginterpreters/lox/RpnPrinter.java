@@ -49,4 +49,12 @@ class RpnPrinter implements Expr.Visitor<String> {
     public String visitVariableExpr(Expr.Variable expr) {
         return expr.name.lexeme;
     }
+
+    @Override
+    public String visitLogicalExpr(Expr.Logical expr) {
+        // In RPN: left, right, operator
+        return expr.left.accept(this) + " " + 
+               expr.right.accept(this) + " " + 
+               expr.operator.lexeme;
+    }
 }
