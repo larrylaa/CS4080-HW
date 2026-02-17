@@ -37,4 +37,16 @@ class RpnPrinter implements Expr.Visitor<String> {
         // For unary, the operand comes before the operator (e.g., "123 -")
         return expr.right.accept(this) + " " + expr.operator.lexeme;
     }
+
+    @Override
+    public String visitAssignExpr(Expr.Assign expr) {
+        // For assignment in RPN: value, variable, =
+        return expr.value.accept(this) + " " + 
+               expr.name.lexeme + " =";
+    }
+
+    @Override
+    public String visitVariableExpr(Expr.Variable expr) {
+        return expr.name.lexeme;
+    }
 }

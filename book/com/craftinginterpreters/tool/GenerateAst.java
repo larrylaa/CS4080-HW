@@ -16,11 +16,20 @@ public class GenerateAst {
         // This list defines the types of expressions in our grammar.
         // Each entry is "ClassName : FieldType fieldName, ..."
         defineAst(outputDir, "Expr", Arrays.asList(
+            "Assign   : Token name, Expr value",
             "Binary   : Expr left, Token operator, Expr right",
             "Ternary  : Expr condition, Token question, Expr thenBranch, Token colon, Expr elseBranch",
             "Grouping : Expr expression",
             "Literal  : Object value",
-            "Unary    : Token operator, Expr right"
+            "Unary    : Token operator, Expr right",
+            "Variable : Token name"
+        ));
+
+        defineAst(outputDir, "Stmt", Arrays.asList(
+            "Block      : List<Stmt> statements",
+            "Expression : Expr expression",
+            "Print      : Expr expression",
+            "Var        : Token name, Expr initializer"
         ));
     }
 
