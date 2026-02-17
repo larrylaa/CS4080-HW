@@ -1,9 +1,0 @@
-// Test statements
-print "Hello, statements!";
-var x = 5;
-print x;
-
-// Test expressions (these won't work in file mode, only REPL)
-// 2 + 3
-// "hello"
-// true

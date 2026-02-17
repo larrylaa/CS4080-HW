@@ -1,3 +1,29 @@
+// LARRY LA - CS 4080 - HW 4
+
+/* 
+The code below for Ch.8 challenge Question 2 (see Lines 54-61)
+
+Maybe you want Lox to be a little more explicit about variable initialization. Instead of implicitly 
+initializing variables to nil, make it a runtime error to access a variable that has not been 
+initialized or assigned to.
+
+SOLUTION:
+- Lines 54-61: Modified visitVarStmt() to use defineUninitialized() for variables declared without initializers
+  instead of defining them with null/nil. Variables with initializers still use the normal define() method.
+
+This works together with the modified Environment.java to track uninitialized variables and throw
+runtime errors when they are accessed before being assigned.
+
+EXAMPLE INPUT/OUTPUT:
+var a;
+var b;
+a = "assigned";
+print a;  // Output: assigned
+print b;  // Runtime Error: Variable 'b' is used before being initialized.
+
+NOTE: Running from here won't work, if you would like to run the code, please use the files in the book directory.
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.List;
@@ -34,12 +60,6 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   @Override
   public Void visitBlockStmt(Stmt.Block stmt) {
     executeBlock(stmt.statements, new Environment(environment));
-    return null;
-  }
-
-  @Override
-  public Void visitExpressionStmt(Stmt.Expression stmt) {
-    evaluate(stmt.expression);
     return null;
   }
 
@@ -102,7 +122,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   @Override
   public Object visitTernaryExpr(Expr.Ternary expr) {
     Object condition = evaluate(expr.condition);
-
+    
     if (isTruthy(condition)) {
       return evaluate(expr.thenBranch);
     } else {
@@ -137,20 +157,15 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if (left instanceof Double && right instanceof Double) {
           return (double)left + (double)right;
         }
-        
-        // If either operand is a string, convert both to strings and concatenate
-        if (left instanceof String || right instanceof String) {
+
+        if (left instanceof String && right instanceof String) {
           return stringify(left) + stringify(right);
         }
 
-        throw new RuntimeError(expr.operator,
-            "Operands must be two numbers or at least one string.");
+        throw new RuntimeError(expr.operator, 
+            "Operands must be two numbers or two strings.");
       case SLASH:
         checkNumberOperands(expr.operator, left, right);
-        // Ch 7 Challenge Question #3: Check for division by zero
-        if ((double)right == 0) {
-          throw new RuntimeError(expr.operator, "Division by zero.");
-        }
         return (double)left / (double)right;
       case STAR:
         checkNumberOperands(expr.operator, left, right);
@@ -166,10 +181,10 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     throw new RuntimeError(operator, "Operand must be a number.");
   }
 
-  private void checkNumberOperands(Token operator,
+  private void checkNumberOperands(Token operator, 
                                    Object left, Object right) {
     if (left instanceof Double && right instanceof Double) return;
-
+    
     throw new RuntimeError(operator, "Operands must be numbers.");
   }
 
