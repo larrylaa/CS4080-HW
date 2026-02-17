@@ -1,3 +1,18 @@
+// LARRY LA - CS 4080 - HW 4
+
+/* 
+The code below for Ch.8 challenge Question 1 (see Lines 25-31)
+
+Adds parseExpression() method to support parsing bare expressions without requiring semicolons.
+This enables the enhanced REPL to handle both "2 + 3" (expression) and "print 5;" (statement).
+
+SOLUTION:
+- Lines 25-31: Added parseExpression() method that tries to parse an expression and returns null on error
+  instead of throwing ParseError. This allows the REPL to gracefully fallback between parsing modes.
+
+NOTE: Running from here won't work, if you would like to run the code, please use the Lox.java in the book directory.
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;

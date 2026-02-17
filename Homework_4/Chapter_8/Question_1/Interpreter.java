@@ -1,3 +1,20 @@
+// LARRY LA - CS 4080 - HW 4
+
+/* 
+The code below for Ch.8 challenge Question 1 (see Lines 188, 202)
+
+Made evaluate() and stringify() methods public to support the enhanced REPL functionality.
+These methods need to be accessible from the Lox class to evaluate and display expression results.
+
+SOLUTION:
+- Line 188: Changed stringify() from private to public visibility
+- Line 202: Changed evaluate() from private to public visibility
+
+This allows the REPL to directly evaluate expressions and format their output for display.
+
+NOTE: Running from here won't work, if you would like to run the code, please use the Lox.java in the book directory.
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.List;
