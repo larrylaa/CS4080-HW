@@ -17,6 +17,7 @@ public class GenerateAst {
         // Each entry is "ClassName : FieldType fieldName, ..."
         defineAst(outputDir, "Expr", Arrays.asList(
             "Binary   : Expr left, Token operator, Expr right",
+            "Ternary  : Expr condition, Token question, Expr thenBranch, Token colon, Expr elseBranch",
             "Grouping : Expr expression",
             "Literal  : Object value",
             "Unary    : Token operator, Expr right"

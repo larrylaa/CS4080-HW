@@ -45,28 +45,27 @@ public class Lox {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
 
-        // For now, just print the tokens.
-        for (Token token : tokens) {
-            System.out.println(token);
+        // New Parser logic from Chapter 6
+        Parser parser = new Parser(tokens);
+        Expr expression = parser.parse();
+
+        // Stop if there was a syntax error.
+        if (hadError) return;
+
+        // Print the parsed expression using the AstPrinter
+        System.out.println(new AstPrinter().print(expression));
+    }
+
+    /** * Reports an error at a specific token location.
+     * This is essential for the parser to tell the user exactly where 
+     * their syntax is broken.
+     */
+    static void error(Token token, String message) {
+        if (token.type == TokenType.EOF) {
+            report(token.line, " at end", message);
+        } else {
+            report(token.line, " at '" + token.lexeme + "'", message);
         }
-
-        // RPN TEST: (1 + 2) * (4 - 3)
-        Expr expression = new Expr.Binary(
-            new Expr.Binary(
-                new Expr.Literal(1),
-                new Token(TokenType.PLUS, "+", null, 1),
-                new Expr.Literal(2)
-            ),
-            new Token(TokenType.STAR, "*", null, 1),
-            new Expr.Binary(
-                new Expr.Literal(4),
-                new Token(TokenType.MINUS, "-", null, 1),
-                new Expr.Literal(3)
-            )
-        );
-
-        System.out.println("RPN Output: " + new RpnPrinter().print(expression));
-        // RPN Output: 1 2 + 4 3 - *
     }
 
     static void error(int line, String message) {

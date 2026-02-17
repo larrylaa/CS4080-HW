@@ -14,6 +14,13 @@ class RpnPrinter implements Expr.Visitor<String> {
     }
 
     @Override
+    public String visitTernaryExpr(Expr.Ternary expr) {
+        return expr.condition.accept(this) + " " +
+               expr.thenBranch.accept(this) + " " +
+               expr.elseBranch.accept(this) + " ?:";
+    }
+
+    @Override
     public String visitGroupingExpr(Expr.Grouping expr) {
         // Parentheses don't exist in RPN; just visit the inner expression
         return expr.expression.accept(this);

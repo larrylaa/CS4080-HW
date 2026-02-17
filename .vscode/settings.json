@@ -1,0 +1,7 @@
+{
+  "java.project.sourcePaths": ["book"],
+  "java.project.referencedLibraries": [],
+  "problems.exclude": {
+    "**/Homework_*/**": true
+  }
+}
