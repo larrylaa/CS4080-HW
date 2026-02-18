@@ -1,3 +1,10 @@
+// LARRY LA - CS 4080 - HW 5
+
+/*
+Ch.10 Q2: Added constructor for anonymous functions (lines 27-32)
+Supports both named and anonymous function objects
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.List;

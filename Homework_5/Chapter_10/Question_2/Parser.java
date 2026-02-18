@@ -1,3 +1,14 @@
+// LARRY LA - CS 4080 - HW 5
+
+/*
+Ch.10 Q2: Added anonymous function parsing
+- functionExpression() method (lines 167-183)
+- FUN handling in primary() (lines 453-455)
+- Smart declaration routing (lines 48-58)
+
+Example: fun(a, b) { return a + b; }
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;

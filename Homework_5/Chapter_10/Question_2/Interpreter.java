@@ -1,3 +1,10 @@
+// LARRY LA - CS 4080 - HW 5
+
+/*
+Ch.10 Q2: Added function expression evaluation (lines 214-216)
+Creates LoxFunction objects from anonymous function expressions
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;

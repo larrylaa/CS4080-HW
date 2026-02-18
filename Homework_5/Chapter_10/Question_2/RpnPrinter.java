@@ -1,3 +1,10 @@
+// LARRY LA - CS 4080 - HW 5
+
+/*
+Ch.10 Q2: Added function expression visitor (lines 74-76)
+Simple RPN representation for anonymous functions
+*/
+
 package com.craftinginterpreters.lox;
 
 class RpnPrinter implements Expr.Visitor<String> {

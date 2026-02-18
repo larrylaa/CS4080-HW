@@ -1,3 +1,14 @@
+// LARRY LA - CS 4080 - HW 5
+
+/*
+Ch.10 Q2: Added Function expression for anonymous functions (line 33)
+Enables syntax: fun(params) { body }
+
+Example:
+var fn = fun(x) { return x * 2; };
+print fn(5); // 10
+*/
+
 package com.craftinginterpreters.tool;
 
 import java.io.IOException;
