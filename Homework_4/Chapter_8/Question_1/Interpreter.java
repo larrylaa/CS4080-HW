@@ -1,7 +1,7 @@
 // LARRY LA - CS 4080 - HW 4
 
 /* 
-Ch.8 Q1: Made evaluate() and stringify() methods public (lines 188, 202)
+Ch.8 Q1: Made evaluate() and stringify() methods public (lines 195, 209)
 Needed for REPL to access these methods
 */
 

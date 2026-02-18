@@ -1,7 +1,7 @@
 // LARRY LA - CS 4080 - HW 5
 
 /*
-Ch.10 Q2: Added function expression visitor (lines 58-67)
+Ch.10 Q2: Added function expression visitor (lines 58-66)
 Prints anonymous functions as (fun (params) ... )
 */
 

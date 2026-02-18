@@ -1,7 +1,7 @@
 // LARRY LA - CS 4080 - HW 4
 
 /* 
-Ch.9 Q3: Added BREAK token (line 18)
+Ch.9 Q3: Added BREAK token (line 24)
 */
 
 package com.craftinginterpreters.lox;

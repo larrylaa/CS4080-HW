@@ -2,10 +2,10 @@
 
 /*
 Ch.11 Q3: Extended resolver to report errors for unused local variables.
-Replaced Map<String, Boolean> scopes with Map<String, Variable> (lines 10, 56)
-Added VariableState enum (lines 22-26) and Variable class (lines 28-36)
-endScope() checks for unused variables (lines 60-66)
-resolveLocal() marks variables as USED (line 89)
+Replaced Map<String, Boolean> scopes with Map<String, Variable> (lines 25, 68)
+Added VariableState enum (lines 37-41) and Variable class (lines 43-51)
+endScope() checks for unused variables (lines 71-80)
+resolveLocal() marks variables as USED (line 101)
 
 Example input:
   { var unused = "hello"; }

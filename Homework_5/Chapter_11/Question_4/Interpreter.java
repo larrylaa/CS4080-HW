@@ -1,9 +1,9 @@
 // LARRY LA - CS 4080 - HW 5
 
 /*
-Ch.11 Q4: Changed locals map from Map<Expr, Integer> to Map<Expr, int[]> (line 13)
-resolve() now stores both depth and slot index (line 30)
-lookUpVariable() and visitAssignExpr() use getAtIndex/assignAtIndex (lines 96, 112)
+Ch.11 Q4: Changed locals map from Map<Expr, Integer> to Map<Expr, int[]> (line 21)
+resolve() now stores both depth and slot index (line 38)
+lookUpVariable() and visitAssignExpr() use getAtIndex/assignAtIndex (lines 99, 117-125)
 */
 
 package com.craftinginterpreters.lox;

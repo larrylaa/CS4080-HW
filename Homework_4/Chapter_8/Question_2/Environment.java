@@ -2,7 +2,7 @@
 
 /* 
 Ch.8 Q2: Runtime error for uninitialized variables
-See lines 10, 20-26, 79-81
+See lines 22, 33-38, 66-68
 
 Example:
 var a;

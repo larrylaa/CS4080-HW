@@ -1,14 +1,14 @@
 // LARRY LA - CS 4080 - HW 4
 
 /* 
-The code below for Ch.8 challenge Question 2 (see Lines 54-61)
+The code below for Ch.8 challenge Question 2 (see Lines 74-82)
 
 Maybe you want Lox to be a little more explicit about variable initialization. Instead of implicitly 
 initializing variables to nil, make it a runtime error to access a variable that has not been 
 initialized or assigned to.
 
 SOLUTION:
-- Lines 54-61: Modified visitVarStmt() to use defineUninitialized() for variables declared without initializers
+- Lines 74-82: Modified visitVarStmt() to use defineUninitialized() for variables declared without initializers
   instead of defining them with null/nil. Variables with initializers still use the normal define() method.
 
 This works together with the modified Environment.java to track uninitialized variables and throw
