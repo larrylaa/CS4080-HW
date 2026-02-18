@@ -1,3 +1,11 @@
+// LARRY LA - CS 4080 - HW 5
+
+/*
+Ch.11 Q4: Added slots ArrayList for index-based local variable storage (line 11)
+define() and defineUninitialized() append to slots (lines 57, 62)
+Added getAtIndex() and assignAtIndex() for O(1) slot access (lines 65, 69)
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;

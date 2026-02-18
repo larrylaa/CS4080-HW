@@ -1,3 +1,16 @@
+// LARRY LA - CS 4080 - HW 5
+
+/*
+Ch.11 Q4: Extended resolver to assign a unique index to each local variable (lines 11, 32, 57, 69, 80-82)
+resolveLocal() now passes both depth and index to the interpreter (line 96)
+Variables look up by slot index instead of name at runtime
+
+Example input:
+  { var a = 1; var b = 2; print a + b; }
+Output:
+  3
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.HashMap;
