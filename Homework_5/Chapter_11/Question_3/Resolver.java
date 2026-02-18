@@ -1,3 +1,18 @@
+// LARRY LA - CS 4080 - HW 5
+
+/*
+Ch.11 Q3: Extended resolver to report errors for unused local variables.
+Replaced Map<String, Boolean> scopes with Map<String, Variable> (lines 10, 56)
+Added VariableState enum (lines 22-26) and Variable class (lines 28-36)
+endScope() checks for unused variables (lines 60-66)
+resolveLocal() marks variables as USED (line 89)
+
+Example input:
+  { var unused = "hello"; }
+Output:
+  [line 1] Error at 'unused': Local variable is never used.
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.HashMap;
