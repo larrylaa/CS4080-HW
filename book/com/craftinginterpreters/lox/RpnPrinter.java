@@ -51,6 +51,19 @@ class RpnPrinter implements Expr.Visitor<String> {
     }
 
     @Override
+    public String visitCallExpr(Expr.Call expr) {
+        StringBuilder result = new StringBuilder();
+        
+        // In RPN: arguments, function, call
+        for (Expr argument : expr.arguments) {
+            result.append(argument.accept(this)).append(" ");
+        }
+        result.append(expr.callee.accept(this)).append(" call");
+        
+        return result.toString();
+    }
+
+    @Override
     public String visitLogicalExpr(Expr.Logical expr) {
         // In RPN: left, right, operator
         return expr.left.accept(this) + " " + 
