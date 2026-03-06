@@ -64,6 +64,23 @@ class RpnPrinter implements Expr.Visitor<String> {
     }
 
     @Override
+    public String visitGetExpr(Expr.Get expr) {
+        return expr.object.accept(this) + " " + expr.name.lexeme + " .";
+    }
+
+    @Override
+    public String visitSetExpr(Expr.Set expr) {
+        return expr.object.accept(this) + " " + 
+               expr.value.accept(this) + " " + 
+               expr.name.lexeme + " =";
+    }
+
+    @Override
+    public String visitThisExpr(Expr.This expr) {
+        return "this";
+    }
+
+    @Override
     public String visitFunctionExpr(Expr.Function expr) {
         return "fun";  // Simple representation for RPN
     }

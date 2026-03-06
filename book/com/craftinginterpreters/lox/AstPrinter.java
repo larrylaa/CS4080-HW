@@ -48,6 +48,21 @@ class AstPrinter implements Expr.Visitor<String> {
     }
 
     @Override
+    public String visitGetExpr(Expr.Get expr) {
+        return parenthesize("." + expr.name.lexeme, expr.object);
+    }
+
+    @Override
+    public String visitSetExpr(Expr.Set expr) {
+        return parenthesize("=" + expr.name.lexeme, expr.object, expr.value);
+    }
+
+    @Override
+    public String visitThisExpr(Expr.This expr) {
+        return "this";
+    }
+
+    @Override
     public String visitFunctionExpr(Expr.Function expr) {
         StringBuilder builder = new StringBuilder();
         builder.append("(fun (");
