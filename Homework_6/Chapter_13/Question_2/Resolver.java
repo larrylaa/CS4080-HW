@@ -1,3 +1,10 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 2
+// This file implements resolver logic for BETA-style method resolution. Removed super scope
+// creation from visitClassStmt(). Modified visitInnerExpr() to validate inner is used inside
+// a class but doesn't resolve it as a local variable since declaringClass is set at bind time.
+
 package com.craftinginterpreters.lox;
 
 import java.util.HashMap;
@@ -295,19 +302,6 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
   @Override
   public Void visitLiteralExpr(Expr.Literal expr) {
-    return null;
-  }
-
-  @Override
-  public Void visitFStringExpr(Expr.FString expr) {
-    // Resolve all expression parts
-    for (int i = 0; i < expr.parts.size(); i++) {
-      if (expr.isExpression.get(i)) {
-        Expr exprPart = (Expr) expr.parts.get(i);
-        resolve(exprPart);
-      }
-      // Literal parts don't need resolution
-    }
     return null;
   }
 

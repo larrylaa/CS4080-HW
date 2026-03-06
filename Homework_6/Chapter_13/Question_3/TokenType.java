@@ -1,3 +1,9 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 3
+// This file adds F_STRING token type to support f-string interpolation.
+// F-strings use syntax like f"Hello {name}" where {expression} gets evaluated.
+
 package com.craftinginterpreters.lox;
 
 enum TokenType {

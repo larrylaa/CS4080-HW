@@ -1,3 +1,21 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.13 Q1: Added multiple inheritance support - Evaluate and validate multiple superclasses
+- Modified visitClassStmt() to handle list of superclasses (lines 67-111)
+- Loops through stmt.superclasses to evaluate each one
+- Validates each superclass is a LoxClass
+- Defines "super" as first superclass for backward compatibility
+- Passes superclasses list to LoxClass constructor
+
+Example:
+  class Cat < Animal, Mammal, Pet {
+    meow() { print "meow"; }
+  }
+  var cat = Cat();
+  cat.meow();
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;
@@ -79,6 +97,12 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     environment.define(stmt.name.lexeme, null);
 
+    // If there are superclasses, create environment with "super" pointing to first one
+    if (!superclasses.isEmpty()) {
+      environment = new Environment(environment);
+      environment.define("super", superclasses.get(0));  // Use first superclass for "super" keyword
+    }
+
     Map<String, LoxFunction> methods = new HashMap<>();
     for (Stmt.Function method : stmt.methods) {
       // Only add instance methods to the methods map
@@ -97,6 +121,10 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         LoxFunction function = new LoxFunction(method, environment, false);
         klass.set(method.name, function);
       }
+    }
+    
+    if (!superclasses.isEmpty()) {
+      environment = environment.enclosing;
     }
     
     environment.assign(stmt.name, klass);
@@ -158,27 +186,6 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   @Override
   public Object visitLiteralExpr(Expr.Literal expr) {
     return expr.value;
-  }
-
-  @Override
-  public Object visitFStringExpr(Expr.FString expr) {
-    StringBuilder result = new StringBuilder();
-    
-    for (int i = 0; i < expr.parts.size(); i++) {
-      if (expr.isExpression.get(i)) {
-        // Evaluate the expression
-        Expr exprPart = (Expr) expr.parts.get(i);
-        Object value = evaluate(exprPart);
-        
-        // Convert to string using stringify
-        result.append(stringify(value));
-      } else {
-        // Append literal string
-        result.append((String) expr.parts.get(i));
-      }
-    }
-    
-    return result.toString();
   }
 
   @Override
@@ -302,24 +309,23 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   }
 
   @Override
-  public Object visitInnerExpr(Expr.Inner expr) {
-    // Get the declaring class (where the current method was declared)
-    // This is set when the method is bound
-    LoxClass declaringClass = (LoxClass)environment.get(new Token(TokenType.IDENTIFIER, "declaringClass", null, 0));
+  public Object visitSuperExpr(Expr.Super expr) {
+    int[] location = locals.get(expr);
+    int distance = location[0];
+    LoxClass superclass = (LoxClass)environment.getAt(
+        distance, "super");
 
-    // Get the actual instance
-    LoxInstance object = (LoxInstance)environment.get(new Token(TokenType.IDENTIFIER, "this", null, 0));
+    LoxInstance object = (LoxInstance)environment.getAt(
+        distance - 1, "this");
 
-    // Search for the method in subclasses (from actual class toward declaring class)
-    LoxFunction method = declaringClass.findMethodBelowClass(
-        expr.method.lexeme, declaringClass, object.klass);
+    LoxFunction method = superclass.findMethod(expr.method.lexeme);
 
     if (method == null) {
       throw new RuntimeError(expr.method,
           "Undefined property '" + expr.method.lexeme + "'.");
     }
 
-    return method.bind(object, object.klass);
+    return method.bind(object);
   }
 
   @Override

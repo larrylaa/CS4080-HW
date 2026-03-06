@@ -1,3 +1,19 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.13 Q1: Added multiple inheritance support - Parse comma-separated superclass list
+- Modified classDeclaration() to parse multiple superclasses (lines 138-148)
+- Uses do-while loop to parse comma-separated list after < token
+- Creates List<Expr.Variable> with all superclass names
+
+Example:
+  class Cat < Animal, Mammal, Pet {
+    meow() { print "meow"; }
+  }
+  var cat = Cat();
+  cat.meow();
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;
@@ -472,16 +488,12 @@ class Parser {
       return new Expr.Literal(previous().literal);
     }
 
-    if (match(F_STRING)) {
-      return parseFString(previous());
-    }
-
-    if (match(INNER)) {
+    if (match(SUPER)) {
       Token keyword = previous();
-      consume(DOT, "Expect '.' after 'inner'.");
+      consume(DOT, "Expect '.' after 'super'.");
       Token method = consume(IDENTIFIER,
-          "Expect subclass method name.");
-      return new Expr.Inner(keyword, method);
+          "Expect superclass method name.");
+      return new Expr.Super(keyword, method);
     }
 
     if (match(THIS)) return new Expr.This(previous());
@@ -501,48 +513,6 @@ class Parser {
     }
 
     throw error(peek(), "Expect expression.");
-  }
-
-  private Expr parseFString(Token token) {
-    Scanner.FStringParts parts = (Scanner.FStringParts) token.literal;
-    List<Object> parsedParts = new ArrayList<>();
-    List<Boolean> isExpression = new ArrayList<>();
-    
-    for (int i = 0; i < parts.parts.size(); i++) {
-      if (parts.isExpression.get(i)) {
-        // Parse the expression string
-        String exprCode = (String) parts.parts.get(i);
-        
-        // Create a mini-scanner and parser for this expression
-        Scanner scanner = new Scanner(exprCode);
-        List<Token> tokens = scanner.scanTokens();
-        
-        // Need at least one token (the expression plus EOF)
-        if (tokens.size() <= 1) {
-          // Empty expression - error was already reported by scanner
-          error(token, "Invalid expression in f-string interpolation: " + exprCode);
-          return new Expr.Literal(""); // Recovery
-        }
-        
-        Parser parser = new Parser(tokens);
-        Expr expr = parser.parseExpression();
-        
-        if (expr == null) {
-          // Parse error in interpolation
-          error(token, "Invalid expression in f-string interpolation: " + exprCode);
-          return new Expr.Literal(""); // Recovery
-        }
-        
-        parsedParts.add(expr);
-        isExpression.add(true);
-      } else {
-        // Keep literal as-is
-        parsedParts.add(parts.parts.get(i));
-        isExpression.add(false);
-      }
-    }
-    
-    return new Expr.FString(token, parsedParts, isExpression);
   }
 
   private boolean match(TokenType... types) {

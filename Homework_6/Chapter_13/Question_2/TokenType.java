@@ -1,3 +1,9 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 2
+// This file defines the TokenType enum with INNER instead of SUPER
+// for BETA-style method resolution.
+
 package com.craftinginterpreters.lox;
 
 enum TokenType {
@@ -12,7 +18,7 @@ enum TokenType {
     LESS, LESS_EQUAL,
 
     // Literals.
-    IDENTIFIER, STRING, F_STRING, NUMBER,
+    IDENTIFIER, STRING, NUMBER,
 
     // Keywords.
     AND, BREAK, CLASS, ELSE, FALSE, FUN, FOR, IF, INNER, NIL, OR,

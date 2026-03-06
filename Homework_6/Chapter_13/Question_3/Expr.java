@@ -1,3 +1,10 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 3
+// This file adds FString expression class to the AST. Added visitFStringExpr() to Visitor
+// interface. FString class contains token, parts (mixed String literals and parsed Expr),
+// and isExpression flags to distinguish literals from expressions during evaluation.
+
 package com.craftinginterpreters.lox;
 
 import java.util.List;

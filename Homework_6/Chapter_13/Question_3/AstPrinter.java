@@ -1,3 +1,9 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 3
+// This file adds f-string support to AstPrinter for debugging. Added visitFStringExpr()
+// that reconstructs f-string syntax with {expressions} for visualization.
+
 package com.craftinginterpreters.lox;
 
 class AstPrinter implements Expr.Visitor<String> {

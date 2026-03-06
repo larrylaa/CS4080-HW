@@ -1,3 +1,13 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 2
+// This file implements BETA-style method resolution where superclass methods take priority
+// over subclass methods (reverse of standard OOP). Added inner keyword to allow superclass
+// methods to call down to subclass implementations. Modified findMethod() to check
+// superclasses first, added findMethodWithClass() to track declaring class for inner
+// resolution, and added findMethodBelowClass() to search from instance class toward
+// declaring class for inner.method() calls.
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;

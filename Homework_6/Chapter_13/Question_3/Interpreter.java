@@ -1,3 +1,10 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 3
+// This file implements f-string evaluation. Added visitFStringExpr() that iterates through
+// parts, evaluates expression parts with evaluate(), converts values to strings with
+// stringify(), and concatenates all parts into the final interpolated string.
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;

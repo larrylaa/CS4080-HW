@@ -1,3 +1,10 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 2
+// This file implements BETA-style method resolution in the Interpreter. Removed super environment
+// setup from visitClassStmt(). Modified visitInnerExpr() to access declaringClass and this from the
+// current environment (set during bind), then search for methods in subclasses using findMethodBelowClass().
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;
@@ -158,27 +165,6 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   @Override
   public Object visitLiteralExpr(Expr.Literal expr) {
     return expr.value;
-  }
-
-  @Override
-  public Object visitFStringExpr(Expr.FString expr) {
-    StringBuilder result = new StringBuilder();
-    
-    for (int i = 0; i < expr.parts.size(); i++) {
-      if (expr.isExpression.get(i)) {
-        // Evaluate the expression
-        Expr exprPart = (Expr) expr.parts.get(i);
-        Object value = evaluate(exprPart);
-        
-        // Convert to string using stringify
-        result.append(stringify(value));
-      } else {
-        // Append literal string
-        result.append((String) expr.parts.get(i));
-      }
-    }
-    
-    return result.toString();
   }
 
   @Override

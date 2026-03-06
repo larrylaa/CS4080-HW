@@ -1,3 +1,20 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.13 Q1: Added multiple inheritance support - Resolve multiple superclasses
+- Modified visitClassStmt() to check and resolve all superclasses (lines 134-180)
+- Loops through stmt.superclasses to check self-inheritance for each
+- Resolves each superclass variable
+- Creates "super" scope with first superclass
+
+Example:
+  class Cat < Animal, Mammal, Pet {
+    meow() { print "meow"; }
+  }
+  var cat = Cat();
+  cat.meow();
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.HashMap;
@@ -154,6 +171,14 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
       }
     }
 
+    // Create "super" scope if there are superclasses
+    if (!stmt.superclasses.isEmpty()) {
+      beginScope();
+      // Use first superclass for "super" keyword
+      scopes.peek().put("super", new Variable(stmt.superclasses.get(0).name, VariableState.USED, scopeNextIndex.peek()));
+      scopeNextIndex.push(scopeNextIndex.pop() + 1);
+    }
+
     beginScope();
     scopes.peek().put("this", new Variable(stmt.name, VariableState.USED, scopeNextIndex.peek()));
     scopeNextIndex.push(scopeNextIndex.pop() + 1);
@@ -170,6 +195,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     endScope();
+
+    if (!stmt.superclasses.isEmpty()) endScope();
 
     currentClass = enclosingClass;
     return null;
@@ -299,19 +326,6 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   }
 
   @Override
-  public Void visitFStringExpr(Expr.FString expr) {
-    // Resolve all expression parts
-    for (int i = 0; i < expr.parts.size(); i++) {
-      if (expr.isExpression.get(i)) {
-        Expr exprPart = (Expr) expr.parts.get(i);
-        resolve(exprPart);
-      }
-      // Literal parts don't need resolution
-    }
-    return null;
-  }
-
-  @Override
   public Void visitLogicalExpr(Expr.Logical expr) {
     resolve(expr.left);
     resolve(expr.right);
@@ -326,14 +340,16 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   }
 
   @Override
-  public Void visitInnerExpr(Expr.Inner expr) {
+  public Void visitSuperExpr(Expr.Super expr) {
     if (currentClass == ClassType.NONE) {
       Lox.error(expr.keyword,
-          "Can't use 'inner' outside of a class.");
+          "Can't use 'super' outside of a class.");
+    } else if (currentClass != ClassType.SUBCLASS) {
+      Lox.error(expr.keyword,
+          "Can't use 'super' in a class with no superclass.");
     }
 
-    // Don't resolve inner as a local variable
-    // The declaring class is set at bind time, not compile time
+    resolveLocal(expr, expr.keyword);
     return null;
   }
 

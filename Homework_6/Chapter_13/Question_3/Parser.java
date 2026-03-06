@@ -1,3 +1,10 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 3
+// This file implements f-string parsing. Added F_STRING case in primary() method.
+// Added parseFString() helper that extracts FStringParts from token, creates mini
+// Scanner/Parser for each expression part, and builds Expr.FString with parsed expressions.
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;

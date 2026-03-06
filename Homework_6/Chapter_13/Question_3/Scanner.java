@@ -1,3 +1,11 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 3
+// This file implements f-string scanning and tokenization. Added FStringParts helper class
+// to store parsed f-string structure (alternating literals and expression code). Modified
+// identifier() to detect f" prefix. Added fstring() method to parse f-string content,
+// handling {expression} interpolation and \{ escape sequences for literal braces.
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;

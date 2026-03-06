@@ -1,3 +1,8 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 2
+// This file implements AstPrinter with inner keyword support for BETA-style method resolution.
+
 package com.craftinginterpreters.lox;
 
 class AstPrinter implements Expr.Visitor<String> {
@@ -24,23 +29,6 @@ class AstPrinter implements Expr.Visitor<String> {
     public String visitLiteralExpr(Expr.Literal expr) {
         if (expr.value == null) return "nil";
         return expr.value.toString();
-    }
-
-    @Override
-    public String visitFStringExpr(Expr.FString expr) {
-        StringBuilder result = new StringBuilder("f\"");
-        for (int i = 0; i < expr.parts.size(); i++) {
-            if (expr.isExpression.get(i)) {
-                result.append("{");
-                Expr exprPart = (Expr) expr.parts.get(i);
-                result.append(exprPart.accept(this));
-                result.append("}");
-            } else {
-                result.append((String) expr.parts.get(i));
-            }
-        }
-        result.append("\"");
-        return result.toString();
     }
 
     @Override

@@ -1,3 +1,9 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 3
+// This file adds f-string support to RpnPrinter. Added visitFStringExpr() that converts
+// f-strings to RPN notation with literal strings and expressions followed by fstring operator.
+
 package com.craftinginterpreters.lox;
 
 class RpnPrinter implements Expr.Visitor<String> {

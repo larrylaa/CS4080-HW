@@ -1,3 +1,8 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 2
+// This file implements RpnPrinter with inner keyword support for BETA-style method resolution.
+
 package com.craftinginterpreters.lox;
 
 class RpnPrinter implements Expr.Visitor<String> {
@@ -30,25 +35,6 @@ class RpnPrinter implements Expr.Visitor<String> {
     public String visitLiteralExpr(Expr.Literal expr) {
         if (expr.value == null) return "nil";
         return expr.value.toString();
-    }
-
-    @Override
-    public String visitFStringExpr(Expr.FString expr) {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < expr.parts.size(); i++) {
-            if (expr.isExpression.get(i)) {
-                Expr exprPart = (Expr) expr.parts.get(i);
-                result.append(exprPart.accept(this));
-                result.append(" ");
-            } else {
-                String literal = (String) expr.parts.get(i);
-                if (!literal.isEmpty()) {
-                    result.append("\"").append(literal).append("\" ");
-                }
-            }
-        }
-        result.append("fstring");
-        return result.toString();
     }
 
     @Override

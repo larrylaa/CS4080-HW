@@ -1,3 +1,10 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 3
+// This file implements f-string resolution. Added visitFStringExpr() that resolves all
+// expression parts to bind variables correctly, ensuring closures and scoping work in
+// f-strings. Literal parts don't need resolution.
+
 package com.craftinginterpreters.lox;
 
 import java.util.HashMap;

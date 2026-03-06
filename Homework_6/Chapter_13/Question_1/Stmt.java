@@ -1,3 +1,18 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.13 Q1: Added multiple inheritance support - Changed superclass to superclasses list
+- Modified Stmt.Class to use List<Expr.Variable> superclasses (line 56)
+- Allows a class to inherit from multiple parent classes
+
+Example:
+  class Cat < Animal, Mammal, Pet {
+    meow() { print "meow"; }
+  }
+  var cat = Cat();
+  cat.meow();  // Can access methods from Cat, Animal, Mammal, and Pet
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.List;

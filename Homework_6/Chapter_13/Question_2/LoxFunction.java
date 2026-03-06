@@ -1,3 +1,10 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 2
+// This file updates LoxFunction to track the declaring class for inner keyword resolution.
+// Modified bind() to store declaringClass in the closure environment so that inner.method()
+// calls can find the subclass method implementation.
+
 package com.craftinginterpreters.lox;
 
 import java.util.List;

@@ -1,3 +1,9 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 2
+// This file updates the Expr AST to use Inner instead of Super
+// for BETA-style method resolution.
+
 package com.craftinginterpreters.lox;
 
 import java.util.List;
@@ -7,7 +13,6 @@ abstract class Expr {
     R visitAssignExpr(Assign expr);
     R visitBinaryExpr(Binary expr);
     R visitCallExpr(Call expr);
-    R visitFStringExpr(FString expr);
     R visitFunctionExpr(Function expr);
     R visitGetExpr(Get expr);
     R visitTernaryExpr(Ternary expr);
@@ -65,22 +70,6 @@ abstract class Expr {
     final Expr callee;
     final Token paren;
     final List<Expr> arguments;
-  }
-  static class FString extends Expr {
-    FString(Token token, List<Object> parts, List<Boolean> isExpression) {
-      this.token = token;
-      this.parts = parts;
-      this.isExpression = isExpression;
-    }
-
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-      return visitor.visitFStringExpr(this);
-    }
-
-    final Token token;
-    final List<Object> parts;
-    final List<Boolean> isExpression;
   }
   static class Function extends Expr {
     Function(List<Token> params, List<Stmt> body) {

@@ -1,3 +1,9 @@
+// LARRY LA
+// CS 4080
+// HW 6 - Chapter 13, Question 2
+// This file updates the Scanner to recognize 'inner' keyword instead of 'super'
+// for BETA-style method resolution.
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;
@@ -8,22 +14,6 @@ import java.util.Map;
 import static com.craftinginterpreters.lox.TokenType.*;
 
 class Scanner {
-    // Helper class for storing f-string parts
-    static class FStringParts {
-        final List<Object> parts = new ArrayList<>();        // Strings for literals, Strings for expression code
-        final List<Boolean> isExpression = new ArrayList<>(); // true = expression, false = literal
-        
-        void addLiteral(String text) {
-            parts.add(text);
-            isExpression.add(false);
-        }
-        
-        void addExpression(String code) {
-            parts.add(code);
-            isExpression.add(true);
-        }
-    }
-
     private final String source;
     private final List<Token> tokens = new ArrayList<>();
     private int start = 0;
@@ -79,10 +69,11 @@ class Scanner {
             case '.': addToken(DOT); break;
             case '-': addToken(MINUS); break;
             case '+': addToken(PLUS); break;
-            case ';': addToken(SEMICOLON); break;
-            case '*': addToken(STAR); break;
             case '?': addToken(QUESTION); break;
             case ':': addToken(COLON); break;
+            case ';': addToken(SEMICOLON); break;
+            case '*': addToken(STAR); break;
+
             case '!':
                 addToken(match('=') ? BANG_EQUAL : BANG);
                 break;
@@ -95,12 +86,12 @@ class Scanner {
             case '>':
                 addToken(match('=') ? GREATER_EQUAL : GREATER);
                 break;
+
             case '/':
                 if (match('/')) {
                     // A comment goes until the end of the line.
                     while (peek() != '\n' && !isAtEnd()) advance();
-                } else if (match('*')) { 
-                    // Challenge 4: Block comments with nesting support
+                } else if (match('*')) {
                     blockComment();
                 } else {
                     addToken(SLASH);
@@ -128,33 +119,7 @@ class Scanner {
                     Lox.error(line, "Unexpected character.");
                 }
                 break;
-        }
-    }
-
-    // Challenge 4: Helper for nested block comments
-    private void blockComment() {
-        int nesting = 1;
-        while (nesting > 0) {
-            if (isAtEnd()) {
-                Lox.error(line, "Unterminated block comment.");
-                return;
             }
-
-            if (peek() == '\n') {
-                line++;
-                advance();
-            } else if (peek() == '/' && peekNext() == '*') {
-                advance(); // consume /
-                advance(); // consume *
-                nesting++;
-            } else if (peek() == '*' && peekNext() == '/') {
-                advance(); // consume *
-                advance(); // consume /
-                nesting--;
-            } else {
-                advance();
-            }
-        }
     }
 
     private void identifier() {
@@ -163,14 +128,6 @@ class Scanner {
         String text = source.substring(start, current);
         TokenType type = keywords.get(text);
         if (type == null) type = IDENTIFIER;
-        
-        // Check for f-string prefix
-        if (text.equals("f") && peek() == '"') {
-            advance(); // consume the "
-            fstring();
-            return;
-        }
-        
         addToken(type);
     }
 
@@ -207,100 +164,27 @@ class Scanner {
         addToken(STRING, value);
     }
 
-    private void fstring() {
-        FStringParts parts = new FStringParts();
-        StringBuilder currentLiteral = new StringBuilder();
-        
-        while (peek() != '"' && !isAtEnd()) {
-            if (peek() == '\n') line++;
-            
-            // Handle escape sequences
-            if (peek() == '\\') {
-                advance(); // consume \
-                char next = peek();
-                
-                if (next == '{' || next == '}') {
-                    // Escaped brace - add literal { or }
-                    currentLiteral.append(next);
-                    advance();
-                } else if (next == 'n') {
-                    currentLiteral.append('\n');
-                    advance();
-                } else if (next == 't') {
-                    currentLiteral.append('\t');
-                    advance();
-                } else if (next == '\\') {
-                    currentLiteral.append('\\');
-                    advance();
-                } else if (next == '"') {
-                    currentLiteral.append('"');
-                    advance();
-                } else {
-                    // Unknown escape - just add the backslash and character
-                    currentLiteral.append('\\');
-                    if (!isAtEnd()) {
-                        currentLiteral.append(next);
-                        advance();
-                    }
-                }
-            }
-            // Handle interpolation start
-            else if (peek() == '{') {
-                // Save current literal part (could be empty)
-                parts.addLiteral(currentLiteral.toString());
-                currentLiteral = new StringBuilder();
-                
-                advance(); // consume {
-                
-                // Parse the expression code until matching }
-                int braceDepth = 1;
-                StringBuilder exprCode = new StringBuilder();
-                
-                while (braceDepth > 0 && !isAtEnd()) {
-                    if (peek() == '{') {
-                        braceDepth++;
-                    } else if (peek() == '}') {
-                        braceDepth--;
-                        if (braceDepth == 0) break; // don't add the closing }
-                    }
-                    
-                    if (peek() == '\n') line++;
-                    exprCode.append(peek());
-                    advance();
-                }
-                
-                if (braceDepth != 0) {
-                    Lox.error(line, "Unmatched '{' in f-string.");
-                    return;
-                }
-                
-                advance(); // consume closing }
-                
-                // Add expression part
-                String expr = exprCode.toString().trim();
-                if (expr.length() == 0) {
-                    Lox.error(line, "Empty expression in f-string interpolation.");
-                }
-                parts.addExpression(expr);
-            }
-            // Regular character
-            else {
-                currentLiteral.append(peek());
+    private void blockComment() {
+        int depth = 1;
+
+        while (depth > 0 && !isAtEnd()) {
+            if (peek() == '/' && peekNext() == '*') {
+                advance();
+                advance();
+                depth++;
+            } else if (peek() == '*' && peekNext() == '/') {
+                advance();
+                advance();
+                depth--;
+            } else {
+                if (peek() == '\n') line++;
                 advance();
             }
         }
-        
-        if (isAtEnd()) {
-            Lox.error(line, "Unterminated f-string.");
-            return;
+
+        if (depth > 0) {
+            Lox.error(line, "Unterminated block comment.");
         }
-        
-        // Add final literal part
-        parts.addLiteral(currentLiteral.toString());
-        
-        advance(); // consume closing "
-        
-        addToken(F_STRING, parts);
     }
 
     private boolean match(char expected) {

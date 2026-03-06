@@ -17,9 +17,9 @@ class LoxInstance {
       return fields.get(name.lexeme);
     }
 
-    LoxFunction method = klass.findMethod(name.lexeme);
-    if (method != null) {
-      LoxFunction bound = method.bind(this);
+    LoxClass.MethodWithClass result = klass.findMethodWithClass(name.lexeme);
+    if (result != null) {
+      LoxFunction bound = result.method.bind(this, result.declaringClass);
       // If it's a getter, invoke it automatically
       if (bound.isGetter()) {
         return bound.call(interpreter, new ArrayList<>());
