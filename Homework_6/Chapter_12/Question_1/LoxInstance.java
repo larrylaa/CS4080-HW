@@ -1,6 +1,19 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.12 Q1: Added static method support - Made fields accessible to LoxClass
+- Changed klass and fields to protected (lines 7-8)
+- Allows LoxClass subclass to access these fields for metaclass support
+
+Example:
+  class Math {
+    class square(n) { return n * n; }  // static method
+  }
+  print Math.square(3);  // Output: 9
+*/
+
 package com.craftinginterpreters.lox;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,20 +25,13 @@ class LoxInstance {
     this.klass = klass;
   }
 
-  Object get(Token name, Interpreter interpreter) {
+  Object get(Token name) {
     if (fields.containsKey(name.lexeme)) {
       return fields.get(name.lexeme);
     }
 
     LoxFunction method = klass.findMethod(name.lexeme);
-    if (method != null) {
-      LoxFunction bound = method.bind(this);
-      // If it's a getter, invoke it automatically
-      if (bound.isGetter()) {
-        return bound.call(interpreter, new ArrayList<>());
-      }
-      return bound;
-    }
+    if (method != null) return method.bind(this);
 
     throw new RuntimeError(name, 
         "Undefined property '" + name.lexeme + "'.");

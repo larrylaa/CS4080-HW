@@ -1,3 +1,19 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.12 Q1: Added static method support - Separate static and instance methods
+- Modified visitClassStmt() to separate static methods (lines 67-91)
+- Instance methods stored in methods map (lines 70-76)  
+- Static methods stored as fields on class object (lines 81-86)
+- visitGetExpr() unchanged - works because LoxClass extends LoxInstance
+
+Example:
+  class Math {
+    class square(n) { return n * n; }  // static method
+  }
+  print Math.square(3);  // Output: 9
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;
@@ -304,7 +320,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   public Object visitGetExpr(Expr.Get expr) {
     Object object = evaluate(expr.object);
     if (object instanceof LoxInstance) {
-      return ((LoxInstance) object).get(expr.name, this);
+      return ((LoxInstance) object).get(expr.name);
     }
 
     throw new RuntimeError(expr.name,

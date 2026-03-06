@@ -1,3 +1,18 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.12 Q2: Added getter method support - Auto-invoke getters on property access
+- Updated get() to accept Interpreter parameter (line 15)
+- Added ArrayList import for empty argument list (line 3)
+- Auto-invoke getters with empty args when accessed (lines 23-26)
+
+Example:
+  class Circle {
+    area { return 3.14159 * this.radius * this.radius; }  // getter
+  }
+  print circle.area;  // Output: 50.2655 (automatically called)
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;

@@ -1,3 +1,18 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.12 Q2: Added getter method support - Parse methods without parentheses as getters
+- Modified classDeclaration() to detect getters vs methods (lines 138-153)
+- Updated function() to accept isGetter and conditionally parse params (lines 155-175)
+- Updated declaration() to pass isGetter=false for standalone functions (line 41)
+
+Example:
+  class Circle {
+    area { return 3.14159 * this.radius * this.radius; }  // No () = getter
+  }
+  print circle.area;  // Output: 50.2655
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;

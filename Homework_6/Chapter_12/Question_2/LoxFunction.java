@@ -1,3 +1,17 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.12 Q2: Added getter method support - Expose isGetter flag from declaration
+- Added isGetter() method (line 74) to check if function is a getter
+- Returns declaration.isGetter, or false for anonymous functions
+
+Example:
+  class Circle {
+    area { return 3.14159 * this.radius * this.radius; }  // getter
+  }
+  print circle.area;  // Output: 50.2655
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.List;

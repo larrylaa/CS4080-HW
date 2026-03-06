@@ -1,3 +1,18 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.12 Q1: Added static method support - Parse 'class' keyword for static methods
+- Modified function() to accept isStatic parameter (line 152)
+- Updated declaration() to pass false for regular functions (line 41)  
+- Modified classDeclaration() to detect 'class' keyword (line 145)
+
+Example:
+  class Math {
+    class square(n) { return n * n; }  // 'class' keyword marks static method
+  }
+  print Math.square(3);  // Output: 9
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;
@@ -38,7 +53,7 @@ class Parser {
       if (match(FUN)) {
         // Look ahead to see if this is a function declaration or expression
         if (check(IDENTIFIER)) {
-          return function("function", false, false);
+          return function("function", false);
         } else {
           // It's a function expression in an expression statement
           // Back up and let statement() handle it
@@ -143,12 +158,7 @@ class Parser {
     while (!check(RIGHT_BRACE) && !isAtEnd()) {
       // Check for static method (class keyword)
       boolean isStatic = match(CLASS);
-      // Peek at the next token after method name to detect getters
-      Token methodName = consume(IDENTIFIER, "Expect method name.");
-      boolean isGetter = check(LEFT_BRACE);  // Getter if no parentheses
-      // Put the method name back by adjusting current
-      current--;
-      methods.add(function("method", isStatic, isGetter));
+      methods.add(function("method", isStatic));
     }
 
     consume(RIGHT_BRACE, "Expect '}' after class body.");
@@ -156,27 +166,23 @@ class Parser {
     return new Stmt.Class(name, methods);
   }
 
-  private Stmt.Function function(String kind, boolean isStatic, boolean isGetter) {
+  private Stmt.Function function(String kind, boolean isStatic) {
     Token name = consume(IDENTIFIER, "Expect " + kind + " name.");
-    
+    consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
     List<Token> parameters = new ArrayList<>();
-    // Only parse parentheses and parameters for non-getters
-    if (!isGetter) {
-      consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
-      if (!check(RIGHT_PAREN)) {
-        do {
-          if (parameters.size() >= 255) {
-            error(peek(), "Can't have more than 255 parameters.");
-          }
-          parameters.add(consume(IDENTIFIER, "Expect parameter name."));
-        } while (match(COMMA));
-      }
-      consume(RIGHT_PAREN, "Expect ')' after parameters.");
+    if (!check(RIGHT_PAREN)) {
+      do {
+        if (parameters.size() >= 255) {
+          error(peek(), "Can't have more than 255 parameters.");
+        }
+        parameters.add(consume(IDENTIFIER, "Expect parameter name."));
+      } while (match(COMMA));
     }
+    consume(RIGHT_PAREN, "Expect ')' after parameters.");
 
     consume(LEFT_BRACE, "Expect '{' before " + kind + " body.");
     List<Stmt> body = block();
-    return new Stmt.Function(name, parameters, body, isStatic, isGetter);
+    return new Stmt.Function(name, parameters, body, isStatic);
   }
 
   private Expr functionExpression() {

@@ -1,3 +1,16 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.12 Q1: Added static method support - Added 'boolean isStatic' to Stmt.Function (line 39)
+This allows the AST to distinguish between static and instance methods.
+
+Example:
+  class Math {
+    class square(n) { return n * n; }  // static method
+  }
+  print Math.square(3);  // Output: 9
+*/
+
 package com.craftinginterpreters.tool;
 
 import java.io.IOException;

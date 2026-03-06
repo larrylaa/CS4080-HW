@@ -1,3 +1,18 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.12 Q2: Added getter method support - Handle static getters
+- Updated get() to accept Interpreter parameter (line 26)
+- Added ArrayList import for empty argument list (line 3)
+- Auto-invoke static getters when accessed (lines 30-35)
+
+Example:
+  class Math {
+    class pi { return 3.14159; }  // static getter
+  }
+  print Math.pi;  // Output: 3.14159 (automatically called)
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;

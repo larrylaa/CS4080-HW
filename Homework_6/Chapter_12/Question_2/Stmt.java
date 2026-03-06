@@ -1,3 +1,18 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.12 Q2: Added getter method support - Added 'boolean isGetter' to Stmt.Function (line 86)
+Getters are declared without parentheses and auto-invoke on property access.
+
+Example:
+  class Circle {
+    init(radius) { this.radius = radius; }
+    area { return 3.14159 * this.radius * this.radius; }  // getter
+  }
+  var c = Circle(4);
+  print c.area;  // Output: 50.2655 (auto-invoked)
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.List;

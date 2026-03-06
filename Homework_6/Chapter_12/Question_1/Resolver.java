@@ -1,3 +1,19 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.12 Q1: Added static method support - Validate static methods don't use 'this'
+- Added STATIC_METHOD to FunctionType enum (line 24)
+- Modified visitClassStmt() to use STATIC_METHOD for static methods (line 145)
+- Modified visitThisExpr() to error if 'this' used in static method (lines 304-308)
+
+Example:
+  class Math {
+    class square(n) { return n * n; }  // static method (valid)
+    class bad() { print this; }        // Error: Can't use 'this' in static method
+  }
+  print Math.square(3);  // Output: 9
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.HashMap;

@@ -1,6 +1,21 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.12 Q1: Added static method support - Metaclass implementation
+- LoxClass extends LoxInstance (line 6) - metaclass approach
+- LoxClass is its own metaclass (line 13)
+- Override get() to look up static methods from fields (line 25)
+- Static methods stored as fields on the class object
+
+Example:
+  class Math {
+    class square(n) { return n * n; }  // static method
+  }
+  print Math.square(3);  // Output: 9
+*/
+
 package com.craftinginterpreters.lox;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,18 +39,10 @@ class LoxClass extends LoxInstance implements LoxCallable {
   }
 
   @Override
-  Object get(Token name, Interpreter interpreter) {
+  Object get(Token name) {
     // First check for static methods (stored as fields)
     if (fields.containsKey(name.lexeme)) {
-      Object value = fields.get(name.lexeme);
-      // If it's a static getter, invoke it automatically
-      if (value instanceof LoxFunction) {
-        LoxFunction function = (LoxFunction) value;
-        if (function.isGetter()) {
-          return function.call(interpreter, new ArrayList<>());
-        }
-      }
-      return value;
+      return fields.get(name.lexeme);
     }
 
     throw new RuntimeError(name, 

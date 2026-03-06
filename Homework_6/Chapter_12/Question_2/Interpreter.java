@@ -1,3 +1,17 @@
+// LARRY LA - CS 4080 - HW 6
+
+/* 
+Ch.12 Q2: Added getter method support - Pass interpreter to get() for getter invocation
+- Modified visitGetExpr() to pass 'this' (interpreter) to get() (line 307)
+- Enables LoxInstance.get() to auto-invoke getters
+
+Example:
+  class Circle {
+    area { return 3.14159 * this.radius * this.radius; }  // getter
+  }
+  print circle.area;  // Output: 50.2655
+*/
+
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;
