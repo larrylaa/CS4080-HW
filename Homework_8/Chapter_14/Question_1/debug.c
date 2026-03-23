@@ -3,6 +3,11 @@
 #include "debug.h"
 #include "value.h"
 
+// LARRY LA - CS 4080 - HW 8
+/*
+Ch.14 Q1: Updated disassembly to use getLine() with compressed metadata.
+See lines 36-41.
+*/
 static int simpleInstruction(const char* name, int offset) {
   printf("%s\n", name);
   return offset + 1;

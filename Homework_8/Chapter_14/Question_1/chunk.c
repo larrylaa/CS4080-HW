@@ -3,6 +3,15 @@
 #include "chunk.h"
 #include "memory.h"
 
+// LARRY LA - CS 4080 - HW 8
+/*
+Ch.14 Q1: Compressed line storage in writeChunk() and decode in getLine().
+See lines 19-21, 27, 41-55, 60-72.
+
+Example input/output:
+Input line sequence: [7, 7, 8]
+Output: getLine(0)=7, getLine(1)=7, getLine(2)=8
+*/
 void initChunk(Chunk* chunk) {
   chunk->count = 0;
   chunk->capacity = 0;

@@ -4,6 +4,11 @@
 #include "common.h"
 #include "value.h"
 
+// LARRY LA - CS 4080 - HW 8
+/*
+Ch.14 Q1: Added run-length encoded line metadata.
+See lines 12-15, 26-28, 35.
+*/
 typedef struct {
   int line;
   int runLength;
