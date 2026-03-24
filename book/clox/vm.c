@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "common.h"
+#include "compiler.h"
 #include "debug.h"
 #include "memory.h"
 #include "vm.h"
@@ -91,10 +92,22 @@ void freeVM(void) {
   vm.stackCapacity = 0;
 }
 
-InterpretResult interpret(Chunk* chunk) {
-  vm.chunk = chunk;
+InterpretResult interpret(const char* source) {
+  Chunk chunk;
+  initChunk(&chunk);
+
+  if (!compile(source, &chunk)) {
+    freeChunk(&chunk);
+    return INTERPRET_COMPILE_ERROR;
+  }
+
+  vm.chunk = &chunk;
   vm.ip = vm.chunk->code;
-  return run();
+
+  InterpretResult result = run();
+
+  freeChunk(&chunk);
+  return result;
 }
 
 void push(Value value) {
