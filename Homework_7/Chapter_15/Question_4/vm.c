@@ -5,6 +5,15 @@
 #include "memory.h"
 #include "vm.h"
 
+// LARRY LA - CS 4080 - HW 7
+/*
+Ch.15 Q4: Optimized OP_NEGATE to negate in place on top of stack.
+See lines 68-73.
+
+Example benchmark output:
+pop/push negate: 0.073180 s
+in-place negate: 0.063216 s (~1.16x faster)
+*/
 VM vm;
 
 #ifndef CLOX_NEGATE_IN_PLACE

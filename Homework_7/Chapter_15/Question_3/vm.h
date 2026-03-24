@@ -4,6 +4,11 @@
 #include "chunk.h"
 #include "value.h"
 
+// LARRY LA - CS 4080 - HW 7
+/*
+Ch.15 Q3: Converted fixed VM stack to dynamic stack metadata.
+See lines 23-25.
+*/
 #define STACK_INITIAL_CAPACITY 8
 
 typedef enum {

@@ -5,6 +5,15 @@
 #include "memory.h"
 #include "vm.h"
 
+// LARRY LA - CS 4080 - HW 7
+/*
+Ch.15 Q3: Dynamic stack growth in push() and heap-backed stack allocation.
+See lines 90-100, 109-116.
+
+Example input/output:
+Input: push 5000 values then pop 5000 values
+Output: values pop in reverse order without stack overflow
+*/
 VM vm;
 
 #ifndef CLOX_NEGATE_IN_PLACE
