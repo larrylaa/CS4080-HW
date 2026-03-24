@@ -1,6 +1,11 @@
 #ifndef clox_scanner_h
 #define clox_scanner_h
 
+// LARRY LA - CS 4080 - HW 8
+/*
+Ch.17 Q3: Added '?' and ':' token types for ternary operator scanning.
+See line 14.
+*/
 typedef enum {
   // Single-character tokens.
   TOKEN_LEFT_PAREN, TOKEN_RIGHT_PAREN,

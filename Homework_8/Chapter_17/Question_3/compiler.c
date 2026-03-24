@@ -5,6 +5,15 @@
 #include "compiler.h"
 #include "scanner.h"
 
+// LARRY LA - CS 4080 - HW 8
+/*
+Ch.17 Q3: Hooked ternary ?: into Pratt parser without bytecode generation.
+See lines 168-175 and 200-201.
+
+Example input/output:
+Input: 1 ? 2 : 3
+Output (parse/compile hook): expression parses as ternary and compiles without syntax error.
+*/
 #ifdef DEBUG_PRINT_CODE
 #include "debug.h"
 #endif

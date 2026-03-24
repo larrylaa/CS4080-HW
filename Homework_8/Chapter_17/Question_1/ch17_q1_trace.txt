@@ -1,0 +1,41 @@
+LARRY LA - CS 4080 - HW 8
+Ch.17 Q1: Function-call trace for Pratt parser flow on:
+(-1 + 2) * 3 - -4
+
+Expression: (-1 + 2) * 3 - -4
+
+Trace of parser-control calls in order (focused on parsePrecedence() and table parser functions):
+
+1) compile() -> expression()
+2) expression() -> parsePrecedence(PREC_ASSIGNMENT)
+3) parsePrecedence(PREC_ASSIGNMENT) consumes '(' and calls grouping()
+4) grouping() -> expression()
+5) expression() -> parsePrecedence(PREC_ASSIGNMENT)
+6) parsePrecedence(PREC_ASSIGNMENT) consumes '-' and calls unary()
+7) unary() -> parsePrecedence(PREC_UNARY)
+8) parsePrecedence(PREC_UNARY) consumes '1' and calls number()
+9) number() returns to parsePrecedence(PREC_UNARY) (stops at '+', since PREC_UNARY > PREC_TERM)
+10) unary() emits OP_NEGATE and returns
+11) parsePrecedence(PREC_ASSIGNMENT) sees '+' infix and calls binary(operator TOKEN_PLUS)
+12) binary(TOKEN_PLUS) -> parsePrecedence(PREC_FACTOR)
+13) parsePrecedence(PREC_FACTOR) consumes '2' and calls number()
+14) number() returns (stops at ')')
+15) binary(TOKEN_PLUS) emits OP_ADD and returns
+16) parsePrecedence(PREC_ASSIGNMENT) returns to grouping() (stops at ')')
+17) grouping() consumes ')' and returns
+18) outer parsePrecedence(PREC_ASSIGNMENT) sees '*' infix and calls binary(operator TOKEN_STAR)
+19) binary(TOKEN_STAR) -> parsePrecedence(PREC_UNARY)
+20) parsePrecedence(PREC_UNARY) consumes '3' and calls number()
+21) number() returns (stops at '-', since PREC_UNARY > PREC_TERM)
+22) binary(TOKEN_STAR) emits OP_MULTIPLY and returns
+23) outer parsePrecedence(PREC_ASSIGNMENT) sees '-' infix and calls binary(operator TOKEN_MINUS)
+24) binary(TOKEN_MINUS) -> parsePrecedence(PREC_FACTOR)
+25) parsePrecedence(PREC_FACTOR) consumes '-' and calls unary()
+26) unary() -> parsePrecedence(PREC_UNARY)
+27) parsePrecedence(PREC_UNARY) consumes '4' and calls number()
+28) number() returns (stops at EOF)
+29) unary() emits OP_NEGATE and returns
+30) parsePrecedence(PREC_FACTOR) returns to binary(TOKEN_MINUS)
+31) binary(TOKEN_MINUS) emits OP_SUBTRACT and returns
+32) outer parsePrecedence(PREC_ASSIGNMENT) returns (stops at EOF)
+33) compile() consumes TOKEN_EOF and finishes

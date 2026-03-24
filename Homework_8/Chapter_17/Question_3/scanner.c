@@ -3,6 +3,11 @@
 #include "common.h"
 #include "scanner.h"
 
+// LARRY LA - CS 4080 - HW 8
+/*
+Ch.17 Q3: Scanner support for ternary punctuation tokens '?' and ':'.
+See lines 216-217.
+*/
 typedef struct {
   const char* start;
   const char* current;
