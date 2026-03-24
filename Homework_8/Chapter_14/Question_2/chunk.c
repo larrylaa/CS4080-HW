@@ -3,6 +3,16 @@
 #include "chunk.h"
 #include "memory.h"
 
+// LARRY LA - CS 4080 - HW 8
+/*
+Ch.14 Q2: writeConstant() emits OP_CONSTANT for 1-byte indexes and
+OP_CONSTANT_LONG for 24-bit indexes.
+See lines 70-83.
+
+Example input/output:
+Input: 257 unique constants
+Output: constant #256 encoded with OP_CONSTANT_LONG
+*/
 void initChunk(Chunk* chunk) {
   chunk->count = 0;
   chunk->capacity = 0;

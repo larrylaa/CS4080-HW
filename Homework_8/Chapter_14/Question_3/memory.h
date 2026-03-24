@@ -13,6 +13,11 @@
 #define FREE_ARRAY(type, pointer, oldCount) \
   reallocate(pointer, sizeof(type) * (oldCount), 0)
 
+// LARRY LA - CS 4080 - HW 8
+/*
+Ch.14 Q3: Added one-time heap init API for custom allocator.
+See line 21.
+*/
 void initMemory(void);
 void* reallocate(void* pointer, size_t oldSize, size_t newSize);
 

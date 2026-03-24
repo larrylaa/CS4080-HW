@@ -1,13 +1,15 @@
 #include "chunk.h"
 #include "common.h"
 #include "debug.h"
-#include "memory.h"
 
+// LARRY LA - CS 4080 - HW 8
+/*
+Ch.14 Q2: main now calls writeConstant() helper.
+See line 17.
+*/
 int main(int argc, const char* argv[]) {
   (void)argc;
   (void)argv;
-
-  initMemory();
 
   Chunk chunk;
   initChunk(&chunk);

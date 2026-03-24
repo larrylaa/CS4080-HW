@@ -3,6 +3,16 @@
 
 #include "memory.h"
 
+// LARRY LA - CS 4080 - HW 8
+/*
+Ch.14 Q3 (Hardcore): Replaced malloc/free/realloc usage in reallocate()
+with a custom allocator over one big heap block.
+See lines 33-147.
+
+Example input/output:
+Input: reallocate(NULL, 0, 64), then reallocate(ptr, 64, 0)
+Output: 64-byte block allocated, then marked free and reusable
+*/
 #define CLOC_HEAP_SIZE (8 * 1024 * 1024)
 #define ALIGNMENT sizeof(uintptr_t)
 #define MIN_SPLIT_BYTES 16

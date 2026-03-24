@@ -3,6 +3,11 @@
 #include "debug.h"
 #include "value.h"
 
+// LARRY LA - CS 4080 - HW 8
+/*
+Ch.14 Q2: Added OP_CONSTANT_LONG disassembly support.
+See lines 21-30, 63-64.
+*/
 static int simpleInstruction(const char* name, int offset) {
   printf("%s\n", name);
   return offset + 1;

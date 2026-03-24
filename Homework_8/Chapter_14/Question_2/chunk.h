@@ -4,6 +4,11 @@
 #include "common.h"
 #include "value.h"
 
+// LARRY LA - CS 4080 - HW 8
+/*
+Ch.14 Q2: Added OP_CONSTANT_LONG and writeConstant() declaration.
+See lines 19, 36.
+*/
 typedef struct {
   int line;
   int runLength;
