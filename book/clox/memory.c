@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "memory.h"
+#include "vm.h"
 
 #define CLOC_HEAP_SIZE (8 * 1024 * 1024)
 #define ALIGNMENT sizeof(uintptr_t)
@@ -17,6 +18,8 @@ typedef struct BlockHeader {
 static uint8_t* heapStart = NULL;
 static BlockHeader* firstBlock = NULL;
 static bool heapInitialized = false;
+
+static void freeObject(Obj* object);
 
 static size_t alignSize(size_t size) {
   return (size + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1);
@@ -134,4 +137,24 @@ void* reallocate(void* pointer, size_t oldSize, size_t newSize) {
   memcpy(newPointer, pointer, bytesToCopy);
   freeBlock(block);
   return newPointer;
+}
+
+void freeObjects(void) {
+  Obj* object = vm.objects;
+  while (object != NULL) {
+    Obj* next = object->next;
+    freeObject(object);
+    object = next;
+  }
+}
+
+static void freeObject(Obj* object) {
+  switch (object->type) {
+    case OBJ_STRING: {
+      ObjString* string = (ObjString*)object;
+      FREE_ARRAY(char, string->chars, string->length + 1);
+      FREE(ObjString, object);
+      break;
+    }
+  }
 }
