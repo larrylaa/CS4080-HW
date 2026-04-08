@@ -6,6 +6,8 @@
 #include "object.h"
 #include "scanner.h"
 
+// LARRY LA - CS 4080 - HW 9
+/* Ch.19 Q2: String literals now use `constantString(...)` (see lines 146-148). */
 #ifdef DEBUG_PRINT_CODE
 #include "debug.h"
 #endif

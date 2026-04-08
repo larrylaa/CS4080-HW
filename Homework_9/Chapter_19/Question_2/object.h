@@ -4,6 +4,8 @@
 #include "common.h"
 #include "value.h"
 
+// LARRY LA - CS 4080 - HW 9
+/* Ch.19 Q2: Added string ownership metadata (`chars`, `ownsChars`) at lines 28-29. */
 #define OBJ_TYPE(value)        (AS_OBJ(value)->type)
 
 #define IS_STRING(value)       isObjType(value, OBJ_STRING)

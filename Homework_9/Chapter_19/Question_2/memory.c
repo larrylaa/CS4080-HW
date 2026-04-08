@@ -4,6 +4,8 @@
 #include "memory.h"
 #include "vm.h"
 
+// LARRY LA - CS 4080 - HW 9
+/* Ch.19 Q2: Free object chars only when `ownsChars` is true (lines 157-160). */
 #define CLOC_HEAP_SIZE (8 * 1024 * 1024)
 #define ALIGNMENT sizeof(uintptr_t)
 #define MIN_SPLIT_BYTES 16

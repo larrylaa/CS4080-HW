@@ -4,6 +4,11 @@
 #include "memory.h"
 #include "vm.h"
 
+// LARRY LA - CS 4080 - HW 9
+/*
+Ch.19 Q1: Updated object cleanup for flexible-array ObjString.
+See lines 147-160.
+*/
 #define CLOC_HEAP_SIZE (8 * 1024 * 1024)
 #define ALIGNMENT sizeof(uintptr_t)
 #define MIN_SPLIT_BYTES 16
@@ -151,10 +156,6 @@ void freeObjects(void) {
 static void freeObject(Obj* object) {
   switch (object->type) {
     case OBJ_STRING: {
-      ObjString* string = (ObjString*)object;
-      if (string->ownsChars) {
-        FREE_ARRAY(char, string->chars, string->length + 1);
-      }
       FREE(ObjString, object);
       break;
     }

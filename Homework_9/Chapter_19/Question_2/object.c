@@ -6,6 +6,15 @@
 #include "value.h"
 #include "vm.h"
 
+// LARRY LA - CS 4080 - HW 9
+/*
+Ch.19 Q2: Added owned vs constant string support (lines 26-47).
+Owned strings are heap-freed; constant strings reference source text.
+
+Example input/output:
+Input: "st" + "ri" + "ng"
+Output: string
+*/
 static Obj* allocateObject(size_t size, ObjType type) {
   Obj* object = (Obj*)reallocate(NULL, 0, size);
   object->type = type;

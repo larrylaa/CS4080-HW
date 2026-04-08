@@ -4,6 +4,8 @@
 #include "common.h"
 #include "value.h"
 
+// LARRY LA - CS 4080 - HW 9
+/* Ch.19 Q1: ObjString stores chars inline via flexible array member (line 28). */
 #define OBJ_TYPE(value)        (AS_OBJ(value)->type)
 
 #define IS_STRING(value)       isObjType(value, OBJ_STRING)
@@ -23,13 +25,11 @@ struct Obj {
 struct ObjString {
   Obj obj;
   int length;
-  char* chars;
-  bool ownsChars;
+  char chars[];
 };
 
 ObjString* takeString(char* chars, int length);
 ObjString* copyString(const char* chars, int length);
-ObjString* constantString(const char* chars, int length);
 void printObject(Value value);
 
 static inline bool isObjType(Value value, ObjType type) {
