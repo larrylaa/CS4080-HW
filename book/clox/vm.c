@@ -147,15 +147,18 @@ void initVM(void) {
   vm.stackCapacity = STACK_INITIAL_CAPACITY;
   vm.stack = GROW_ARRAY(Value, NULL, 0, vm.stackCapacity);
   resetStack();
+  initTable(&vm.strings);
   vm.objects = NULL;
 }
 
 void freeVM(void) {
+  freeTable(&vm.strings);
   freeObjects();
   FREE_ARRAY(Value, vm.stack, vm.stackCapacity);
   vm.stack = NULL;
   vm.stackTop = NULL;
   vm.stackCapacity = 0;
+  initTable(&vm.strings);
   vm.objects = NULL;
 }
 
