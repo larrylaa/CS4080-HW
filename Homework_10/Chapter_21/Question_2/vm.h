@@ -1,3 +1,10 @@
+// LARRY LA - CS 4080 - HW 10
+/*
+Ch.21 Q2: VM now stores global values in slot array + per-constant slot cache
+to speed repeated global variable reads/writes.
+See lines 23-28.
+*/
+
 #ifndef clox_vm_h
 #define clox_vm_h
 

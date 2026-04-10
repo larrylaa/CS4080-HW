@@ -1,3 +1,14 @@
+// LARRY LA - CS 4080 - HW 10
+/*
+Ch.21 Q2: Added a simple global-slot cache so repeated global accesses avoid
+rehashing names on every OP_GET_GLOBAL/OP_SET_GLOBAL.
+See lines 35-46 and 112-151.
+
+Example:
+Input: var a=nil; a=a; a=a; print a;
+Output: nil
+*/
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>

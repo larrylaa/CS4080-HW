@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 10
+/*
+Ch.20 Q1: Updated string interning table insert to use Value keys (OBJ_VAL).
+See lines 38-39.
+
+Example:
+Input: copyString("hello", 5) twice
+Output: second lookup reuses interned string entry
+*/
+
 #include <stdio.h>
 #include <string.h>
 

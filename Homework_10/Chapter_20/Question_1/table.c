@@ -1,3 +1,14 @@
+// LARRY LA - CS 4080 - HW 10
+/*
+Ch.20 Q1: Added Value-key hashing/probing with explicit entry states
+(empty/tombstone/occupied) so nil is a valid key and primitive keys work.
+See lines 24-177.
+
+Example:
+Input: set true->2.5, false->3.5, nil->4.5, 42->1.5
+Output: all four keys are retrievable; delete/reinsert still works
+*/
+
 #include <stdlib.h>
 #include <string.h>
 

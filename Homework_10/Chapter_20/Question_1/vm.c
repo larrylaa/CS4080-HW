@@ -1,3 +1,14 @@
+// LARRY LA - CS 4080 - HW 10
+/*
+Ch.20 Q1: Updated global-variable hash table accesses to pass Value keys
+(OBJ_VAL(name)) after generalizing table key type.
+See lines 109-127.
+
+Example:
+Input: var x = 7; print x;
+Output: 7
+*/
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -30,19 +41,6 @@ static void runtimeError(const char* format, ...) {
 
 static Value peek(int distance) {
   return vm.stackTop[-1 - distance];
-}
-
-static int resolveGlobalSlot(uint8_t nameConstant) {
-  int slot = vm.globalSlots[nameConstant];
-  if (slot != -1) return slot;
-
-  ObjString* name = AS_STRING(vm.chunk->constants.values[nameConstant]);
-  Value slotValue;
-  if (!tableGet(&vm.globals, OBJ_VAL(name), &slotValue)) return -1;
-
-  slot = (int)AS_NUMBER(slotValue);
-  vm.globalSlots[nameConstant] = slot;
-  return slot;
 }
 
 static bool isFalsey(Value value) {
@@ -110,43 +108,28 @@ static InterpretResult run(void) {
       case OP_FALSE: push(BOOL_VAL(false)); break;
       case OP_POP: pop(); break;
       case OP_GET_GLOBAL: {
-        uint8_t nameConstant = READ_BYTE();
-        int slot = resolveGlobalSlot(nameConstant);
-        if (slot == -1) {
-          ObjString* name = AS_STRING(vm.chunk->constants.values[nameConstant]);
+        ObjString* name = READ_STRING();
+        Value value;
+        if (!tableGet(&vm.globals, OBJ_VAL(name), &value)) {
           runtimeError("Undefined variable '%s'.", name->chars);
           return INTERPRET_RUNTIME_ERROR;
         }
-        push(vm.globalValues.values[slot]);
+        push(value);
         break;
       }
       case OP_DEFINE_GLOBAL: {
-        uint8_t nameConstant = READ_BYTE();
-        ObjString* name = AS_STRING(vm.chunk->constants.values[nameConstant]);
-
-        Value slotValue;
-        if (tableGet(&vm.globals, OBJ_VAL(name), &slotValue)) {
-          int slot = (int)AS_NUMBER(slotValue);
-          vm.globalValues.values[slot] = peek(0);
-          vm.globalSlots[nameConstant] = slot;
-        } else {
-          writeValueArray(&vm.globalValues, peek(0));
-          int slot = vm.globalValues.count - 1;
-          tableSet(&vm.globals, OBJ_VAL(name), NUMBER_VAL((double)slot));
-          vm.globalSlots[nameConstant] = slot;
-        }
+        ObjString* name = READ_STRING();
+        tableSet(&vm.globals, OBJ_VAL(name), peek(0));
         pop();
         break;
       }
       case OP_SET_GLOBAL: {
-        uint8_t nameConstant = READ_BYTE();
-        int slot = resolveGlobalSlot(nameConstant);
-        if (slot == -1) {
-          ObjString* name = AS_STRING(vm.chunk->constants.values[nameConstant]);
+        ObjString* name = READ_STRING();
+        if (tableSet(&vm.globals, OBJ_VAL(name), peek(0))) {
+          tableDelete(&vm.globals, OBJ_VAL(name));
           runtimeError("Undefined variable '%s'.", name->chars);
           return INTERPRET_RUNTIME_ERROR;
         }
-        vm.globalValues.values[slot] = peek(0);
         break;
       }
       case OP_PRINT: {
@@ -206,19 +189,12 @@ void initVM(void) {
   vm.stack = GROW_ARRAY(Value, NULL, 0, vm.stackCapacity);
   resetStack();
   initTable(&vm.globals);
-  initValueArray(&vm.globalValues);
-  vm.globalSlots = NULL;
-  vm.globalSlotCount = 0;
   initTable(&vm.strings);
   vm.objects = NULL;
 }
 
 void freeVM(void) {
   freeTable(&vm.globals);
-  freeValueArray(&vm.globalValues);
-  FREE_ARRAY(int, vm.globalSlots, vm.globalSlotCount);
-  vm.globalSlots = NULL;
-  vm.globalSlotCount = 0;
   freeTable(&vm.strings);
   freeObjects();
   FREE_ARRAY(Value, vm.stack, vm.stackCapacity);
@@ -226,7 +202,6 @@ void freeVM(void) {
   vm.stackTop = NULL;
   vm.stackCapacity = 0;
   initTable(&vm.globals);
-  initValueArray(&vm.globalValues);
   initTable(&vm.strings);
   vm.objects = NULL;
 }
@@ -242,17 +217,9 @@ InterpretResult interpret(const char* source) {
 
   vm.chunk = &chunk;
   vm.ip = vm.chunk->code;
-  vm.globalSlotCount = vm.chunk->constants.count;
-  vm.globalSlots = ALLOCATE(int, vm.globalSlotCount);
-  for (int i = 0; i < vm.globalSlotCount; i++) {
-    vm.globalSlots[i] = -1;
-  }
 
   InterpretResult result = run();
 
-  FREE_ARRAY(int, vm.globalSlots, vm.globalSlotCount);
-  vm.globalSlots = NULL;
-  vm.globalSlotCount = 0;
   freeChunk(&chunk);
   return result;
 }

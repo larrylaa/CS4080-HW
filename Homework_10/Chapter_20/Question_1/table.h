@@ -1,3 +1,14 @@
+// LARRY LA - CS 4080 - HW 10
+/*
+Ch.20 Q1: Generalized hash table keys from ObjString* to Value so numbers,
+Booleans, nil, and strings can all be keys.
+See lines 12-28.
+
+Example:
+Input: tableSet(&t, NUMBER_VAL(42), NUMBER_VAL(1.5));
+Output: tableGet(&t, NUMBER_VAL(42), &out) -> true, out = 1.5
+*/
+
 #ifndef clox_table_h
 #define clox_table_h
 

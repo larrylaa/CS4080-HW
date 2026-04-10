@@ -1,3 +1,14 @@
+// LARRY LA - CS 4080 - HW 10
+/*
+Ch.21 Q1: Optimized identifier constants by reusing an existing constant-table
+slot when the same identifier string already exists in the chunk.
+See lines 160-172.
+
+Example:
+Input: var a=nil; a; a; a;
+Output: repeated `a` references reuse one constant slot for "a".
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 

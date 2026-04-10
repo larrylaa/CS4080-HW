@@ -1,0 +1,33 @@
+LARRY LA - CS 4080 - HW 10
+Chapter 20 - Question 3
+
+Benchmark command:
+gcc -std=c17 -Wall -Wextra -Werror -pedantic table_bench.c table.c value.c memory.c -o table_bench
+./table_bench
+
+Test cases and measured results:
+1) sequential_numbers
+Test case: set 40,000 sequential number keys, then get 40,000.
+Result: best=7.349 ms, avg=13.026 ms
+
+2) random_numbers
+Test case: set 40,000 pseudorandom numeric keys, then get same 40,000.
+Result: best=6.962 ms, avg=7.909 ms
+
+3) delete_churn
+Test case: set 25,000 keys, then 6 rounds of delete-all + set-all, then get all.
+Result: best=21.915 ms, avg=25.307 ms
+
+4) miss_heavy
+Test case: set 30,000 keys, then run 240,000 failed lookups.
+Result: best=17.341 ms, avg=18.373 ms
+
+5) tiny_keyspace
+Test case: repeat set/get on only true, false, nil for 500,000 iterations.
+Result: best=45.909 ms, avg=48.084 ms
+
+Performance variation summary:
+- Random and sequential were both fast and similar at this scale.
+- Delete churn was slower because repeated deletes/inserts create extra table work and probing overhead.
+- Miss-heavy was slower than baseline due to many unsuccessful probes.
+- Tiny keyspace showed the largest total time because it performs the most total operations (3 sets + 3 gets per iteration), even though table size stays very small.
