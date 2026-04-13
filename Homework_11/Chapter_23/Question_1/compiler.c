@@ -1,3 +1,15 @@
+// LARRY LA - CS 4080 - HW 11
+/*
+Ch.23 Q1: Added switch/case/default statement compilation.
+See lines 875-949 and 1051-1052.
+
+Example:
+Input:
+switch (2) { case 1: print "one"; case 2: print "two"; default: print "d"; }
+Output:
+two
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

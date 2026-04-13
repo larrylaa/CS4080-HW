@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 11
+/*
+Ch.23 Q3: Scanner recognizes the unless keyword.
+See line 220.
+
+Example:
+Input: unless (cond) print 1; else print 2;
+Output: unless scans as TOKEN_UNLESS.
+*/
+
 #include <string.h>
 
 #include "common.h"

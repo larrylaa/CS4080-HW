@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 11
+/*
+Ch.23 Q2: Scanner recognizes the continue keyword.
+See line 179.
+
+Example:
+Input: continue;
+Output: continue scans as TOKEN_CONTINUE.
+*/
+
 #include <string.h>
 
 #include "common.h"

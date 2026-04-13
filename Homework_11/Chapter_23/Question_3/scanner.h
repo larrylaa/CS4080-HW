@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 11
+/*
+Ch.23 Q3: Added TOKEN_UNLESS for the new unless statement.
+See line 34.
+
+Example:
+Input: unless (cond) print 1; else print 2;
+Output: token stream includes TOKEN_UNLESS.
+*/
+
 #ifndef clox_scanner_h
 #define clox_scanner_h
 

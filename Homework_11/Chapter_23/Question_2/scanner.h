@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 11
+/*
+Ch.23 Q2: Added TOKEN_CONTINUE for continue statements.
+See line 29.
+
+Example:
+Input: continue;
+Output: token stream includes TOKEN_CONTINUE.
+*/
+
 #ifndef clox_scanner_h
 #define clox_scanner_h
 

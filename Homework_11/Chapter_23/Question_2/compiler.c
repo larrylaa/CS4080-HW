@@ -1,3 +1,16 @@
+// LARRY LA - CS 4080 - HW 11
+/*
+Ch.23 Q2: Added continue statement support with loop-aware scope cleanup.
+See lines 404-411, 817-833, 965-979, and 982-1028.
+
+Example:
+Input:
+for (var i = 0; i < 5; i = i + 1) { if (i < 3) continue; print i; }
+Output:
+3
+4
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

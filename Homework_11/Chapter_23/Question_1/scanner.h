@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 11
+/*
+Ch.23 Q1: Added switch tokens: TOKEN_SWITCH, TOKEN_CASE, TOKEN_DEFAULT.
+See lines 29 and 34.
+
+Example:
+Input: switch (x) { case 1: print 1; default: print 0; }
+Output: keyword tokens include switch/case/default.
+*/
+
 #ifndef clox_scanner_h
 #define clox_scanner_h
 
