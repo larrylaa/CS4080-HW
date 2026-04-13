@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 11
+/*
+Ch.22 Q3: Scanner recognizes `const` in identifierType().
+See lines 161-168.
+
+Example:
+Input: const n = 3;
+Output: `const` scans as TOKEN_CONST.
+*/
+
 #include <string.h>
 
 #include "common.h"

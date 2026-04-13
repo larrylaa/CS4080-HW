@@ -1,3 +1,20 @@
+// LARRY LA - CS 4080 - HW 11
+/*
+Ch.22 Q1: Replaced linear local-variable lookup with a hash-bucket lookup.
+See lines 55-89, 252-284, 387-444.
+Average lookup is O(1) instead of scanning all locals.
+Worth it for large scopes; for tiny scripts, linear scan is simpler and fine.
+
+Example:
+Input:
+{
+  var a = 1;
+  print a;
+}
+Output:
+1
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

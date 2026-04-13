@@ -1,3 +1,12 @@
+// LARRY LA - CS 4080 - HW 11
+/*
+Ch.22 Q4: Updated disassembly for 16-bit local slots.
+See lines 20-25 and 79-82.
+
+Example:
+Output line: OP_SET_LOCAL  299
+*/
+
 #include <stdio.h>
 
 #include "debug.h"

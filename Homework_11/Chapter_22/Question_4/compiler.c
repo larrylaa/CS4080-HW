@@ -1,3 +1,14 @@
+// LARRY LA - CS 4080 - HW 11
+/*
+Ch.22 Q4: Extended compiler locals to support more than 256 locals in scope.
+See lines 55-89, 191-194, 382-494.
+Locals are dynamic now, and local slot operands are emitted as 16-bit values.
+
+Example:
+Input: block with 300 locals and `v299 = 42; print v299;`
+Output: 42
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 11
+/*
+Ch.22 Q3: Added TOKEN_CONST for the new const keyword.
+See line 30.
+
+Example:
+Input: const x = 1;
+Output: token stream includes TOKEN_CONST.
+*/
+
 #ifndef clox_scanner_h
 #define clox_scanner_h
 

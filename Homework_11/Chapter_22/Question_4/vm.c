@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 11
+/*
+Ch.22 Q4: VM now reads 16-bit local slot operands.
+See lines 78-79 and 124-130.
+
+Example:
+Input: many locals, then `v299 = 42; print v299;`
+Output: 42
+*/
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>

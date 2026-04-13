@@ -1,3 +1,17 @@
+// LARRY LA - CS 4080 - HW 11
+/*
+Ch.22 Q3: Added `const` as a single-assignment variable keyword.
+See lines 360-368, 469-497, 703-736.
+Assignments to const variables now fail at compile time.
+
+Example:
+Input:
+const a = 10;
+a = 20;
+Output:
+[line 2] Error at '=': Can't assign to const variable.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
