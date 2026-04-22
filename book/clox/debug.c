@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "debug.h"
+#include "object.h"
 #include "value.h"
 
 static int simpleInstruction(const char* name, int offset) {
@@ -13,6 +14,12 @@ static int shortInstruction(const char* name, Chunk* chunk, int offset) {
                              chunk->code[offset + 2]);
   printf("%-16s %4d\n", name, slot);
   return offset + 3;
+}
+
+static int byteInstruction(const char* name, Chunk* chunk, int offset) {
+  uint8_t slot = chunk->code[offset + 1];
+  printf("%-16s %4d\n", name, slot);
+  return offset + 2;
 }
 
 static int jumpInstruction(const char* name, int sign,
@@ -86,6 +93,10 @@ int disassembleInstruction(Chunk* chunk, int offset) {
       return constantInstruction("OP_DEFINE_GLOBAL", chunk, offset);
     case OP_SET_GLOBAL:
       return constantInstruction("OP_SET_GLOBAL", chunk, offset);
+    case OP_GET_UPVALUE:
+      return byteInstruction("OP_GET_UPVALUE", chunk, offset);
+    case OP_SET_UPVALUE:
+      return byteInstruction("OP_SET_UPVALUE", chunk, offset);
     case OP_PRINT:
       return simpleInstruction("OP_PRINT", offset);
     case OP_JUMP:
@@ -112,6 +123,27 @@ int disassembleInstruction(Chunk* chunk, int offset) {
       return simpleInstruction("OP_NOT", offset);
     case OP_NEGATE:
       return simpleInstruction("OP_NEGATE", offset);
+    case OP_CALL:
+      return byteInstruction("OP_CALL", chunk, offset);
+    case OP_CLOSURE: {
+      offset++;
+      uint8_t constant = chunk->code[offset++];
+      printf("%-16s %4d ", "OP_CLOSURE", constant);
+      printValue(chunk->constants.values[constant]);
+      printf("\n");
+
+      ObjFunction* function = AS_FUNCTION(chunk->constants.values[constant]);
+      for (int j = 0; j < function->upvalueCount; j++) {
+        int isLocal = chunk->code[offset++];
+        int index = chunk->code[offset++];
+        printf("%04d      |                     %s %d\n",
+               offset - 2, isLocal ? "local" : "upvalue", index);
+      }
+
+      return offset;
+    }
+    case OP_CLOSE_UPVALUE:
+      return simpleInstruction("OP_CLOSE_UPVALUE", offset);
     case OP_RETURN:
       return simpleInstruction("OP_RETURN", offset);
     default:

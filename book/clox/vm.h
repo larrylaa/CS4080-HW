@@ -1,11 +1,12 @@
 #ifndef clox_vm_h
 #define clox_vm_h
 
-#include "chunk.h"
+#include "object.h"
 #include "table.h"
 #include "value.h"
 
-#define STACK_INITIAL_CAPACITY 8
+#define FRAMES_MAX 64
+#define STACK_MAX (FRAMES_MAX * UINT8_COUNT)
 
 typedef enum {
   INTERPRET_OK,
@@ -14,16 +15,20 @@ typedef enum {
 } InterpretResult;
 
 typedef struct {
-  Chunk* chunk;
+  ObjClosure* closure;
   uint8_t* ip;
-  Value* stack;
+  Value* slots;
+} CallFrame;
+
+typedef struct {
+  CallFrame frames[FRAMES_MAX];
+  int frameCount;
+  Value stack[STACK_MAX];
   Value* stackTop;
-  int stackCapacity;
   Table globals;
   ValueArray globalValues;
-  int* globalSlots;
-  int globalSlotCount;
   Table strings;
+  ObjUpvalue* openUpvalues;
   Obj* objects;
 } VM;
 
