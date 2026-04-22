@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 12
+/*
+Ch.24 Q2: newNative() now stores required native arity on ObjNative.
+See lines 42-46.
+
+Example:
+Input: defineNative(\"clock\", ..., 0)
+Output: native object stores arity=0 for runtime call validation.
+*/
+
 #include <stdio.h>
 #include <string.h>
 

@@ -1,0 +1,43 @@
+// LARRY LA - CS 4080 - HW 12
+// Ch.25 Q3: Vector "objects" modeled with closures and method dispatch.
+// Example output for this file:
+// 2
+// 3
+// 10
+// 20
+// 12
+// 23
+
+fun vector(x, y) {
+  fun getX() {
+    return x;
+  }
+
+  fun getY() {
+    return y;
+  }
+
+  fun add(other) {
+    return vector(x + other("x")(), y + other("y")());
+  }
+
+  fun method(name) {
+    if (name == "x") return getX;
+    if (name == "y") return getY;
+    if (name == "add") return add;
+    return nil;
+  }
+
+  return method;
+}
+
+var v1 = vector(2, 3);
+var v2 = vector(10, 20);
+var v3 = v1("add")(v2);
+
+print v1("x")();
+print v1("y")();
+print v2("x")();
+print v2("y")();
+print v3("x")();
+print v3("y")();

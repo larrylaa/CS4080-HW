@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 12
+/*
+Ch.25 Q2: Added OP_CLOSE_UPVALUE_AT opcode for closing by slot without pop.
+See enum entry near lines 33-35.
+
+Example:
+Input: loop variable captured by closures across iterations.
+Output: runtime closes current iteration capture before next iteration.
+*/
+
 #ifndef clox_chunk_h
 #define clox_chunk_h
 

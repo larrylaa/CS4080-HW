@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 12
+/*
+Ch.24 Q3: ObjNative construction supports the updated NativeFn signature and arity.
+See lines 42-46.
+
+Example:
+Input: newNative(sqrtNative, 1)
+Output: stores function pointer + arity for safe dispatch.
+*/
+
 #include <stdio.h>
 #include <string.h>
 

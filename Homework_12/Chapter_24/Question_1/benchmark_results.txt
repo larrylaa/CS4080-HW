@@ -1,0 +1,19 @@
+LARRY LA - CS 4080 - HW 12
+Chapter 24 - Question 1
+
+Builds:
+- Optimized ip-local run loop: default CLOX_REGISTER_IP_OPT=1
+- Baseline comparison: -DCLOX_REGISTER_IP_OPT=0
+- Both built with: -O2 -DDEBUG_PRINT_CODE=0 -DDEBUG_TRACE_EXECUTION=0
+
+Benchmark 1 (calls):
+Program shape: 1,000,000 calls to inc(x)
+opt runs:  0.10, 0.10, 0.10, 0.10, 0.10
+base runs: 0.11, 0.10, 0.11, 0.09, 0.09
+avg: opt 0.100s, base 0.100s
+
+Benchmark 2 (loop):
+Program shape: while loop with 5,000,000 iterations and arithmetic updates
+opt runs:  0.36, 0.36, 0.40, 0.37, 0.38
+base runs: 0.41, 0.41, 0.39, 0.40, 0.41
+avg: opt 0.374s, base 0.404s

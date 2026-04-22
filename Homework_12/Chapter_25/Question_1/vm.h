@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 12
+/*
+Ch.25 Q1: CallFrame stores both ObjFunction* and optional ObjClosure*.
+See lines 18-22.
+
+Example:
+Input: plain function call with no captured upvalues.
+Output: frame executes via function pointer without requiring closure object.
+*/
+
 #ifndef clox_vm_h
 #define clox_vm_h
 

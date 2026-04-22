@@ -1,3 +1,14 @@
+// LARRY LA - CS 4080 - HW 12
+/*
+Ch.25 Q2: for-loop iteration variable capture fix.
+See lines 1076-1137 in forStatement() where OP_CLOSE_UPVALUE_AT is emitted
+at iteration handoff so closures capture per-iteration storage.
+
+Example:
+Input: closures captured in for (var a=1; a<=2; a=a+1)
+Output: first closure prints 1, second prints 2.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

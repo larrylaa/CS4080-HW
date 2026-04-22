@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 12
+/*
+Ch.25 Q2: Disassembler support for OP_CLOSE_UPVALUE_AT.
+See case near lines 164-166.
+
+Example:
+Input: compiled for-loop with captured loop variable.
+Output includes: OP_CLOSE_UPVALUE_AT <slot>.
+*/
+
 #include <stdio.h>
 
 #include "debug.h"

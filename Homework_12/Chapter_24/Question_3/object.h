@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 12
+/*
+Ch.24 Q3: NativeFn now returns success/failure and writes result via out param.
+See lines 56, 60-61, and 81.
+
+Example:
+Input: sqrt(\"oops\");
+Output: native reports runtime error instead of returning garbage.
+*/
+
 #ifndef clox_object_h
 #define clox_object_h
 

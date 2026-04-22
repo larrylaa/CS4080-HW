@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 12
+/*
+Ch.24 Q2: Added native-function arity metadata and access macros.
+See lines 18-21, 56-62, and 81.
+
+Example:
+Input: clock(1);
+Output: runtime error "Expected 0 arguments but got 1."
+*/
+
 #ifndef clox_object_h
 #define clox_object_h
 

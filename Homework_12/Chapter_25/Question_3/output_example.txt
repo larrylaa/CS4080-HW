@@ -1,0 +1,12 @@
+LARRY LA - CS 4080 - HW 12
+Chapter 25 - Question 3
+
+Program: vector_objects.lox
+
+Output:
+2
+3
+10
+20
+12
+23

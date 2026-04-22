@@ -1,3 +1,14 @@
+// LARRY LA - CS 4080 - HW 12
+/*
+Ch.25 Q1: Selective function wrapping and call support for bare ObjFunction.
+See lines 22-29 (CLOX_WRAP_ALL_FUNCTIONS), 118-160 (call paths),
+381-397 (OP_CLOSURE selective wrapping), and 553-567 (script entry).
+
+Example:
+Input: fun add(a,b){return a+b;} print add(2,3);
+Output: 5
+*/
+
 #include <stdarg.h>
 #include <math.h>
 #include <stdio.h>

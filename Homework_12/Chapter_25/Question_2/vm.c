@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 12
+/*
+Ch.25 Q2: Runtime execution for OP_CLOSE_UPVALUE_AT.
+See lines 402-405.
+
+Example:
+Input: for-loop closure capture test from design note.
+Output: 1 then 2.
+*/
+
 #include <stdarg.h>
 #include <math.h>
 #include <stdio.h>
