@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 13
+/*
+Ch.26 Q3: Companion file for RC-style acyclic pre-pass augmentation.
+See line 1347.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

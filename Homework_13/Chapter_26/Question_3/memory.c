@@ -1,3 +1,12 @@
+// LARRY LA - CS 4080 - HW 13
+/*
+Ch.26 Q3: Added RC-style acyclic pre-pass before mark-sweep.
+See lines 269-532 and 534-544.
+
+Example:
+Input: acyclic temporary object graph with no remaining roots.
+Output: reclaimed in pre-pass; cycles still handled by mark-sweep.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

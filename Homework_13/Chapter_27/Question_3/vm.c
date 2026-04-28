@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 13
+/*
+Ch.27 Q3: Added delField(instance, name) native for field removal.
+See lines 610-619 and 642.
+*/
 #include <stdarg.h>
 #include <math.h>
 #include <stdio.h>

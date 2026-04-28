@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 13
+/*
+Ch.27 Q1: Missing property reads return nil instead of aborting VM.
+See lines 330-345.
+*/
 #include <stdarg.h>
 #include <math.h>
 #include <stdio.h>

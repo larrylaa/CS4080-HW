@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 13
+/*
+Ch.27 Q2: Added dynamic field-name natives hasField/getField/setField.
+See lines 572-608 and 639-641.
+*/
 #include <stdarg.h>
 #include <math.h>
 #include <stdio.h>

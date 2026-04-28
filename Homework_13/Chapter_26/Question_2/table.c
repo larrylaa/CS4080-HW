@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 13
+/*
+Ch.26 Q2: Companion file for flip-bit mark strategy optimization.
+See lines 174-181.
+*/
 #include <stdlib.h>
 #include <string.h>
 
