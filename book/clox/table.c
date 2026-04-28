@@ -22,28 +22,25 @@ static uint32_t hashBits(uint64_t x) {
 }
 
 static uint32_t hashValue(Value key) {
-  switch (key.type) {
-    case VAL_BOOL:
-      return AS_BOOL(key) ? 3u : 2u;
-    case VAL_NIL:
-      return 1u;
-    case VAL_NUMBER: {
-      double number = AS_NUMBER(key);
-      if (number == 0) number = 0.0;
-      uint64_t bits;
-      memcpy(&bits, &number, sizeof(double));
-      return hashBits(bits);
-    }
-    case VAL_OBJ:
-      if (IS_STRING(key)) return AS_STRING(key)->hash;
-      return hashBits((uint64_t)(uintptr_t)AS_OBJ(key));
+  if (IS_BOOL(key)) {
+    return AS_BOOL(key) ? 3u : 2u;
   }
+  if (IS_NIL(key)) return 1u;
+  if (IS_NUMBER(key)) {
+    double number = AS_NUMBER(key);
+    if (number == 0) number = 0.0;
+    uint64_t bits;
+    memcpy(&bits, &number, sizeof(double));
+    return hashBits(bits);
+  }
+  if (IS_STRING(key)) return AS_STRING(key)->hash;
+  if (IS_OBJ(key)) return hashBits((uint64_t)(uintptr_t)AS_OBJ(key));
 
   return 0;
 }
 
 static Entry* findEntry(Entry* entries, int capacity, Value key) {
-  uint32_t index = hashValue(key) % capacity;
+  uint32_t index = hashValue(key) & (capacity - 1);
   Entry* tombstone = NULL;
 
   for (;;) {
@@ -56,7 +53,7 @@ static Entry* findEntry(Entry* entries, int capacity, Value key) {
       return entry;
     }
 
-    index = (index + 1) % capacity;
+    index = (index + 1) & (capacity - 1);
   }
 }
 
@@ -147,7 +144,7 @@ ObjString* tableFindString(Table* table, const char* chars,
                            int length, uint32_t hash) {
   if (table->count == 0) return NULL;
 
-  uint32_t index = hash % table->capacity;
+  uint32_t index = hash & (table->capacity - 1);
   for (;;) {
     Entry* entry = &table->entries[index];
     if (entry->state == ENTRY_EMPTY) {
@@ -162,7 +159,7 @@ ObjString* tableFindString(Table* table, const char* chars,
       }
     }
 
-    index = (index + 1) % table->capacity;
+    index = (index + 1) & (table->capacity - 1);
   }
 }
 

@@ -24,6 +24,7 @@
 #endif
 
 VM vm;
+static bool callValue(Value callee, int argCount);
 
 static void resetStack(void) {
   vm.stackTop = vm.stack;
@@ -117,6 +118,16 @@ static void closeUpvalues(Value* last) {
   }
 }
 
+static void defineMethod(ObjString* name) {
+  Value method = peek(0);
+  if (IS_FUNCTION(method)) {
+    method = OBJ_VAL(newClosure(AS_FUNCTION(method)));
+  }
+  ObjClass* klass = AS_CLASS(peek(1));
+  tableSet(&klass->methods, OBJ_VAL(name), method);
+  pop();
+}
+
 static bool callFunction(ObjFunction* function, ObjClosure* closure,
                          int argCount) {
   if (argCount != function->arity) {
@@ -138,20 +149,84 @@ static bool callFunction(ObjFunction* function, ObjClosure* closure,
   return true;
 }
 
-static bool callClosure(ObjClosure* closure, int argCount) {
+static bool call(ObjClosure* closure, int argCount) {
   return callFunction(closure->function, closure, argCount);
+}
+
+static bool callClosure(ObjClosure* closure, int argCount) {
+  return call(closure, argCount);
 }
 
 static bool callPlainFunction(ObjFunction* function, int argCount) {
   return callFunction(function, NULL, argCount);
 }
 
+static bool bindMethod(ObjClass* klass, ObjString* name) {
+  Value method;
+  if (!tableGet(&klass->methods, OBJ_VAL(name), &method)) {
+    runtimeError("Undefined property '%s'.", name->chars);
+    return false;
+  }
+
+  ObjClosure* closure = IS_CLOSURE(method)
+      ? AS_CLOSURE(method)
+      : newClosure(AS_FUNCTION(method));
+  ObjBoundMethod* bound = newBoundMethod(peek(0), closure);
+  pop();
+  push(OBJ_VAL(bound));
+  return true;
+}
+
+static bool invokeFromClass(ObjClass* klass, ObjString* name, int argCount) {
+  Value method;
+  if (!tableGet(&klass->methods, OBJ_VAL(name), &method)) {
+    runtimeError("Undefined property '%s'.", name->chars);
+    return false;
+  }
+  ObjClosure* closure = IS_CLOSURE(method)
+      ? AS_CLOSURE(method)
+      : newClosure(AS_FUNCTION(method));
+  return call(closure, argCount);
+}
+
+static bool invoke(ObjString* name, int argCount) {
+  Value receiver = peek(argCount);
+  if (!IS_INSTANCE(receiver)) {
+    runtimeError("Only instances have methods.");
+    return false;
+  }
+
+  ObjInstance* instance = AS_INSTANCE(receiver);
+  Value value;
+  if (tableGet(&instance->fields, OBJ_VAL(name), &value)) {
+    vm.stackTop[-argCount - 1] = value;
+    return callValue(value, argCount);
+  }
+
+  return invokeFromClass(instance->klass, name, argCount);
+}
+
 static bool callValue(Value callee, int argCount) {
   if (IS_OBJ(callee)) {
     switch (OBJ_TYPE(callee)) {
+      case OBJ_BOUND_METHOD: {
+        ObjBoundMethod* bound = AS_BOUND_METHOD(callee);
+        vm.stackTop[-argCount - 1] = bound->receiver;
+        return call(bound->method, argCount);
+      }
       case OBJ_CLASS: {
         ObjClass* klass = AS_CLASS(callee);
         vm.stackTop[-argCount - 1] = OBJ_VAL(newInstance(klass));
+        Value initializer;
+        if (tableGet(&klass->methods, OBJ_VAL(vm.initString), &initializer)) {
+          ObjClosure* closure = IS_CLOSURE(initializer)
+              ? AS_CLOSURE(initializer)
+              : newClosure(AS_FUNCTION(initializer));
+          return call(closure, argCount);
+        } else if (argCount != 0) {
+          runtimeError("Expected 0 arguments but got %d.", argCount);
+          return false;
+        }
         return true;
       }
       case OBJ_CLOSURE:
@@ -335,8 +410,9 @@ static InterpretResult run(void) {
           push(value);
           break;
         }
-        pop();
-        push(NIL_VAL);
+        if (!bindMethod(instance->klass, name)) {
+          return INTERPRET_RUNTIME_ERROR;
+        }
         break;
       }
       case OP_SET_PROPERTY: {
@@ -349,6 +425,14 @@ static InterpretResult run(void) {
         Value value = pop();
         pop();
         push(value);
+        break;
+      }
+      case OP_GET_SUPER: {
+        ObjString* name = READ_STRING();
+        ObjClass* superclass = AS_CLASS(pop());
+        if (!bindMethod(superclass, name)) {
+          return INTERPRET_RUNTIME_ERROR;
+        }
         break;
       }
       case OP_PRINT: {
@@ -412,8 +496,42 @@ static InterpretResult run(void) {
         LOAD_FRAME();
         break;
       }
+      case OP_INVOKE: {
+        ObjString* method = READ_STRING();
+        int argCount = READ_BYTE();
+        STORE_IP();
+        if (!invoke(method, argCount)) {
+          return INTERPRET_RUNTIME_ERROR;
+        }
+        LOAD_FRAME();
+        break;
+      }
+      case OP_SUPER_INVOKE: {
+        ObjString* method = READ_STRING();
+        int argCount = READ_BYTE();
+        ObjClass* superclass = AS_CLASS(pop());
+        STORE_IP();
+        if (!invokeFromClass(superclass, method, argCount)) {
+          return INTERPRET_RUNTIME_ERROR;
+        }
+        LOAD_FRAME();
+        break;
+      }
       case OP_CLASS:
         push(OBJ_VAL(newClass(READ_STRING())));
+        break;
+      case OP_INHERIT: {
+        Value superclass = peek(1);
+        if (!IS_CLASS(superclass)) {
+          RUNTIME_ERROR("Superclass must be a class.");
+        }
+        ObjClass* subclass = AS_CLASS(peek(0));
+        tableAddAll(&AS_CLASS(superclass)->methods, &subclass->methods);
+        pop();
+        break;
+      }
+      case OP_METHOD:
+        defineMethod(READ_STRING());
         break;
       case OP_CLOSURE: {
         ObjFunction* function = AS_FUNCTION(READ_CONSTANT());
@@ -543,21 +661,23 @@ static bool typeNative(int argCount, Value* args, Value* result) {
   (void)argCount;
   const char* name = NULL;
 
-  switch (args[0].type) {
-    case VAL_BOOL: name = "bool"; break;
-    case VAL_NIL: name = "nil"; break;
-    case VAL_NUMBER: name = "number"; break;
-    case VAL_OBJ:
-      switch (OBJ_TYPE(args[0])) {
-        case OBJ_CLASS: name = "class"; break;
-        case OBJ_STRING: name = "string"; break;
-        case OBJ_INSTANCE: name = "instance"; break;
-        case OBJ_CLOSURE:
-        case OBJ_FUNCTION: name = "function"; break;
-        case OBJ_NATIVE: name = "native"; break;
-        case OBJ_UPVALUE: name = "upvalue"; break;
-      }
-      break;
+  if (IS_BOOL(args[0])) {
+    name = "bool";
+  } else if (IS_NIL(args[0])) {
+    name = "nil";
+  } else if (IS_NUMBER(args[0])) {
+    name = "number";
+  } else if (IS_OBJ(args[0])) {
+    switch (OBJ_TYPE(args[0])) {
+      case OBJ_BOUND_METHOD: name = "function"; break;
+      case OBJ_CLASS: name = "class"; break;
+      case OBJ_STRING: name = "string"; break;
+      case OBJ_INSTANCE: name = "instance"; break;
+      case OBJ_CLOSURE:
+      case OBJ_FUNCTION: name = "function"; break;
+      case OBJ_NATIVE: name = "native"; break;
+      case OBJ_UPVALUE: name = "upvalue"; break;
+    }
   }
 
   *result = OBJ_VAL(copyString(name, (int)strlen(name)));
@@ -618,6 +738,7 @@ void initVM(void) {
   initTable(&vm.globals);
   initValueArray(&vm.globalValues);
   initTable(&vm.strings);
+  vm.initString = NULL;
   vm.bytesAllocated = 0;
   vm.nextGC = 1024 * 1024;
   vm.currentMark = true;
@@ -625,6 +746,7 @@ void initVM(void) {
   vm.grayCount = 0;
   vm.grayCapacity = 0;
   vm.grayStack = NULL;
+  vm.initString = copyString("init", 4);
 
   defineNative("clock", clockNative, 0);
   defineNative("sqrt", sqrtNative, 1);
@@ -641,6 +763,7 @@ void freeVM(void) {
   freeTable(&vm.globals);
   freeValueArray(&vm.globalValues);
   freeTable(&vm.strings);
+  vm.initString = NULL;
   freeObjects();
 }
 

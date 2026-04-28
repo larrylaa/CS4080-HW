@@ -5,6 +5,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifndef NAN_BOXING
+#define NAN_BOXING
+#endif
+
 #ifndef DEBUG_PRINT_CODE
 #define DEBUG_PRINT_CODE 1
 #endif

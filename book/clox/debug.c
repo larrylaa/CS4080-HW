@@ -51,6 +51,15 @@ static int constantLongInstruction(const char* name, Chunk* chunk,
   return offset + 4;
 }
 
+static int invokeInstruction(const char* name, Chunk* chunk, int offset) {
+  uint8_t constant = chunk->code[offset + 1];
+  uint8_t argCount = chunk->code[offset + 2];
+  printf("%-16s (%d args) %4d '", name, argCount, constant);
+  printValue(chunk->constants.values[constant]);
+  printf("'\n");
+  return offset + 3;
+}
+
 void disassembleChunk(Chunk* chunk, const char* name) {
   printf("== %s ==\n", name);
 
@@ -101,6 +110,8 @@ int disassembleInstruction(Chunk* chunk, int offset) {
       return constantInstruction("OP_GET_PROPERTY", chunk, offset);
     case OP_SET_PROPERTY:
       return constantInstruction("OP_SET_PROPERTY", chunk, offset);
+    case OP_GET_SUPER:
+      return constantInstruction("OP_GET_SUPER", chunk, offset);
     case OP_PRINT:
       return simpleInstruction("OP_PRINT", offset);
     case OP_JUMP:
@@ -129,8 +140,16 @@ int disassembleInstruction(Chunk* chunk, int offset) {
       return simpleInstruction("OP_NEGATE", offset);
     case OP_CALL:
       return byteInstruction("OP_CALL", chunk, offset);
+    case OP_INVOKE:
+      return invokeInstruction("OP_INVOKE", chunk, offset);
+    case OP_SUPER_INVOKE:
+      return invokeInstruction("OP_SUPER_INVOKE", chunk, offset);
     case OP_CLASS:
       return constantInstruction("OP_CLASS", chunk, offset);
+    case OP_INHERIT:
+      return simpleInstruction("OP_INHERIT", offset);
+    case OP_METHOD:
+      return constantInstruction("OP_METHOD", chunk, offset);
     case OP_CLOSURE: {
       offset++;
       uint8_t constant = chunk->code[offset++];

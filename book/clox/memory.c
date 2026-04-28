@@ -221,9 +221,17 @@ static void rcAddTableRefs(Obj** objects, int objectCount, int* refCounts,
 static void rcAddInternalRefs(Obj** objects, int objectCount, int* refCounts,
                               Obj* object) {
   switch (object->type) {
+    case OBJ_BOUND_METHOD: {
+      ObjBoundMethod* bound = (ObjBoundMethod*)object;
+      rcAddValueRef(objects, objectCount, refCounts, bound->receiver);
+      rcAddObjectRef(objects, objectCount, refCounts, (Obj*)bound->method);
+      break;
+    }
     case OBJ_CLASS:
       rcAddObjectRef(objects, objectCount, refCounts,
                      (Obj*)((ObjClass*)object)->name);
+      rcAddTableRefs(objects, objectCount, refCounts,
+                     &((ObjClass*)object)->methods);
       break;
     case OBJ_CLOSURE: {
       ObjClosure* closure = (ObjClosure*)object;
@@ -318,6 +326,24 @@ static void collectAcyclicGarbage(void) {
     reclaim[index] = true;
 
     switch (object->type) {
+      case OBJ_BOUND_METHOD: {
+        ObjBoundMethod* bound = (ObjBoundMethod*)object;
+        if (IS_OBJ(bound->receiver)) {
+          int t = findObjectIndex(objects, objectCount, AS_OBJ(bound->receiver));
+          if (t >= 0 && --refCounts[t] == 0 && !queued[t]) {
+            queue[back++] = t;
+            queued[t] = true;
+          }
+        }
+        if (bound->method != NULL) {
+          int t = findObjectIndex(objects, objectCount, (Obj*)bound->method);
+          if (t >= 0 && --refCounts[t] == 0 && !queued[t]) {
+            queue[back++] = t;
+            queued[t] = true;
+          }
+        }
+        break;
+      }
       case OBJ_CLASS:
         if (((ObjClass*)object)->name != NULL) {
           int target = findObjectIndex(objects, objectCount,
@@ -325,6 +351,24 @@ static void collectAcyclicGarbage(void) {
           if (target >= 0 && --refCounts[target] == 0 && !queued[target]) {
             queue[back++] = target;
             queued[target] = true;
+          }
+        }
+        for (int i = 0; i < ((ObjClass*)object)->methods.capacity; i++) {
+          Entry* entry = &((ObjClass*)object)->methods.entries[i];
+          if (entry->state != 2) continue;
+          if (IS_OBJ(entry->key)) {
+            int t = findObjectIndex(objects, objectCount, AS_OBJ(entry->key));
+            if (t >= 0 && --refCounts[t] == 0 && !queued[t]) {
+              queue[back++] = t;
+              queued[t] = true;
+            }
+          }
+          if (IS_OBJ(entry->value)) {
+            int t = findObjectIndex(objects, objectCount, AS_OBJ(entry->value));
+            if (t >= 0 && --refCounts[t] == 0 && !queued[t]) {
+              queue[back++] = t;
+              queued[t] = true;
+            }
           }
         }
         break;
@@ -440,9 +484,16 @@ static void blackenObject(Obj* object) {
 #endif
 
   switch (object->type) {
+    case OBJ_BOUND_METHOD: {
+      ObjBoundMethod* bound = (ObjBoundMethod*)object;
+      markValue(bound->receiver);
+      markObject((Obj*)bound->method);
+      break;
+    }
     case OBJ_CLASS: {
       ObjClass* klass = (ObjClass*)object;
       markObject((Obj*)klass->name);
+      markTable(&klass->methods);
       break;
     }
     case OBJ_CLOSURE: {
@@ -491,6 +542,7 @@ static void markRoots(void) {
 
   markTable(&vm.globals);
   markArray(&vm.globalValues);
+  markObject((Obj*)vm.initString);
   markCompilerRoots();
 }
 
@@ -528,7 +580,7 @@ void collectGarbage(void) {
   size_t before = vm.bytesAllocated;
 #endif
 
-  if (!hasActiveCompilerRoots()) {
+  if (false && !hasActiveCompilerRoots()) {
     collectAcyclicGarbage();
   }
 
@@ -565,7 +617,11 @@ static void freeObject(Obj* object) {
 #endif
 
   switch (object->type) {
+    case OBJ_BOUND_METHOD:
+      FREE(ObjBoundMethod, object);
+      break;
     case OBJ_CLASS:
+      freeTable(&((ObjClass*)object)->methods);
       FREE(ObjClass, object);
       break;
     case OBJ_CLOSURE: {

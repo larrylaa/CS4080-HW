@@ -29,6 +29,7 @@ typedef struct {
   Table globals;
   ValueArray globalValues;
   Table strings;
+  ObjString* initString;
   ObjUpvalue* openUpvalues;
   size_t bytesAllocated;
   size_t nextGC;
