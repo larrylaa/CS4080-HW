@@ -10,8 +10,12 @@
 static Obj* allocateObject(size_t size, ObjType type) {
   Obj* object = (Obj*)reallocate(NULL, 0, size);
   object->type = type;
+  object->isMarked = false;
   object->next = vm.objects;
   vm.objects = object;
+#if DEBUG_LOG_GC
+  printf("%p allocate %zu for %d\n", (void*)object, size, type);
+#endif
   return object;
 }
 
@@ -29,6 +33,12 @@ ObjClosure* newClosure(ObjFunction* function) {
   return closure;
 }
 
+ObjClass* newClass(ObjString* name) {
+  ObjClass* klass = (ObjClass*)allocateObject(sizeof(ObjClass), OBJ_CLASS);
+  klass->name = name;
+  return klass;
+}
+
 ObjFunction* newFunction(void) {
   ObjFunction* function = (ObjFunction*)allocateObject(sizeof(ObjFunction),
                                                        OBJ_FUNCTION);
@@ -37,6 +47,14 @@ ObjFunction* newFunction(void) {
   function->name = NULL;
   initChunk(&function->chunk);
   return function;
+}
+
+ObjInstance* newInstance(ObjClass* klass) {
+  ObjInstance* instance = (ObjInstance*)allocateObject(sizeof(ObjInstance),
+                                                       OBJ_INSTANCE);
+  instance->klass = klass;
+  initTable(&instance->fields);
+  return instance;
 }
 
 ObjNative* newNative(NativeFn function, int arity) {
@@ -62,7 +80,9 @@ static ObjString* allocateString(char* chars, int length, uint32_t hash,
   string->chars = chars;
   string->hash = hash;
   string->ownsChars = ownsChars;
+  push(OBJ_VAL(string));
   tableSet(&vm.strings, OBJ_VAL(string), NIL_VAL);
+  pop();
   return string;
 }
 
@@ -111,11 +131,17 @@ static void printFunction(ObjFunction* function) {
 
 void printObject(Value value) {
   switch (OBJ_TYPE(value)) {
+    case OBJ_CLASS:
+      printf("%s", AS_CLASS(value)->name->chars);
+      break;
     case OBJ_CLOSURE:
       printFunction(AS_CLOSURE(value)->function);
       break;
     case OBJ_FUNCTION:
       printFunction(AS_FUNCTION(value));
+      break;
+    case OBJ_INSTANCE:
+      printf("%s instance", AS_INSTANCE(value)->klass->name->chars);
       break;
     case OBJ_NATIVE:
       printf("<native fn>");

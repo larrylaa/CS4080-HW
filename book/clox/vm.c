@@ -68,8 +68,8 @@ static bool isFalsey(Value value) {
 }
 
 static void concatenate(void) {
-  ObjString* b = AS_STRING(pop());
-  ObjString* a = AS_STRING(pop());
+  ObjString* b = AS_STRING(peek(0));
+  ObjString* a = AS_STRING(peek(1));
 
   int length = a->length + b->length;
   char* chars = ALLOCATE(char, length + 1);
@@ -78,6 +78,8 @@ static void concatenate(void) {
   chars[length] = '\0';
 
   ObjString* result = takeString(chars, length);
+  pop();
+  pop();
   push(OBJ_VAL(result));
 }
 
@@ -147,6 +149,11 @@ static bool callPlainFunction(ObjFunction* function, int argCount) {
 static bool callValue(Value callee, int argCount) {
   if (IS_OBJ(callee)) {
     switch (OBJ_TYPE(callee)) {
+      case OBJ_CLASS: {
+        ObjClass* klass = AS_CLASS(callee);
+        vm.stackTop[-argCount - 1] = OBJ_VAL(newInstance(klass));
+        return true;
+      }
       case OBJ_CLOSURE:
         return callClosure(AS_CLOSURE(callee), argCount);
       case OBJ_FUNCTION:
@@ -315,6 +322,34 @@ static InterpretResult run(void) {
         *frame->closure->upvalues[slot]->location = peek(0);
         break;
       }
+      case OP_GET_PROPERTY: {
+        if (!IS_INSTANCE(peek(0))) {
+          RUNTIME_ERROR("Only instances have properties.");
+        }
+
+        ObjInstance* instance = AS_INSTANCE(peek(0));
+        ObjString* name = READ_STRING();
+        Value value;
+        if (tableGet(&instance->fields, OBJ_VAL(name), &value)) {
+          pop();
+          push(value);
+          break;
+        }
+
+        RUNTIME_ERROR("Undefined property '%s'.", name->chars);
+      }
+      case OP_SET_PROPERTY: {
+        if (!IS_INSTANCE(peek(1))) {
+          RUNTIME_ERROR("Only instances have fields.");
+        }
+
+        ObjInstance* instance = AS_INSTANCE(peek(1));
+        tableSet(&instance->fields, OBJ_VAL(READ_STRING()), peek(0));
+        Value value = pop();
+        pop();
+        push(value);
+        break;
+      }
       case OP_PRINT: {
         printValue(pop());
         printf("\n");
@@ -376,6 +411,9 @@ static InterpretResult run(void) {
         LOAD_FRAME();
         break;
       }
+      case OP_CLASS:
+        push(OBJ_VAL(newClass(READ_STRING())));
+        break;
       case OP_CLOSURE: {
         ObjFunction* function = AS_FUNCTION(READ_CONSTANT());
         if (!CLOX_WRAP_ALL_FUNCTIONS && function->upvalueCount == 0) {
@@ -510,7 +548,9 @@ static bool typeNative(int argCount, Value* args, Value* result) {
     case VAL_NUMBER: name = "number"; break;
     case VAL_OBJ:
       switch (OBJ_TYPE(args[0])) {
+        case OBJ_CLASS: name = "class"; break;
         case OBJ_STRING: name = "string"; break;
+        case OBJ_INSTANCE: name = "instance"; break;
         case OBJ_CLOSURE:
         case OBJ_FUNCTION: name = "function"; break;
         case OBJ_NATIVE: name = "native"; break;
@@ -528,7 +568,12 @@ void initVM(void) {
   initTable(&vm.globals);
   initValueArray(&vm.globalValues);
   initTable(&vm.strings);
+  vm.bytesAllocated = 0;
+  vm.nextGC = 1024 * 1024;
   vm.objects = NULL;
+  vm.grayCount = 0;
+  vm.grayCapacity = 0;
+  vm.grayStack = NULL;
 
   defineNative("clock", clockNative, 0);
   defineNative("sqrt", sqrtNative, 1);
@@ -542,12 +587,6 @@ void freeVM(void) {
   freeValueArray(&vm.globalValues);
   freeTable(&vm.strings);
   freeObjects();
-  vm.stackTop = vm.stack;
-  vm.frameCount = 0;
-  initTable(&vm.globals);
-  initValueArray(&vm.globalValues);
-  initTable(&vm.strings);
-  vm.objects = NULL;
 }
 
 InterpretResult interpret(const char* source) {
