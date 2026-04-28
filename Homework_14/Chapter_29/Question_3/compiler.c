@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 14
+/*
+Ch.29 Q3: Added parser/compiler support for inner() and method context.
+See lines 104-109, 143, 789-801, 930, 1035.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

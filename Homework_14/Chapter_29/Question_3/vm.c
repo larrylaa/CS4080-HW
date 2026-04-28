@@ -1,3 +1,12 @@
+// LARRY LA - CS 4080 - HW 14
+/*
+Ch.29 Q3: Replaced override flow with BETA-style top-down + inner().
+See lines 125-146, 211-264, 517-523, 618-619.
+
+Example:
+Input: BostonCream().cook() where Doughnut.cook calls inner().
+Output: superclass prelude, subclass refinement, superclass epilogue.
+*/
 #include <stdarg.h>
 #include <math.h>
 #include <stdio.h>
@@ -29,8 +38,6 @@
 
 VM vm;
 static bool callValue(Value callee, int argCount);
-static ObjString* cachedGlobalName = NULL;
-static int cachedGlobalSlot = -1;
 
 static void resetStack(void) {
   vm.stackTop = vm.stack;
@@ -65,17 +72,9 @@ static Value peek(int distance) {
 }
 
 static int resolveGlobalSlot(ObjString* name) {
-#if CLOX_GLOBAL_SLOT_CACHE
-  if (name == cachedGlobalName) return cachedGlobalSlot;
-#endif
   Value slotValue;
   if (!tableGet(&vm.globals, OBJ_VAL(name), &slotValue)) return -1;
-  int slot = (int)AS_NUMBER(slotValue);
-#if CLOX_GLOBAL_SLOT_CACHE
-  cachedGlobalName = name;
-  cachedGlobalSlot = slot;
-#endif
-  return slot;
+  return (int)AS_NUMBER(slotValue);
 }
 
 static bool isFalsey(Value value) {
@@ -838,8 +837,6 @@ static bool delFieldNative(int argCount, Value* args, Value* result) {
 
 void initVM(void) {
   resetStack();
-  cachedGlobalName = NULL;
-  cachedGlobalSlot = -1;
   initTable(&vm.globals);
   initValueArray(&vm.globalValues);
   initTable(&vm.strings);
@@ -865,8 +862,6 @@ void initVM(void) {
 }
 
 void freeVM(void) {
-  cachedGlobalName = NULL;
-  cachedGlobalSlot = -1;
   freeTable(&vm.globals);
   freeValueArray(&vm.globalValues);
   freeTable(&vm.strings);

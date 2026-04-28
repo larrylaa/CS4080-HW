@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 15
+/*
+Ch.30 Q1: Added global slot cache toggle.
+See lines 28-29.
+*/
 #ifndef clox_common_h
 #define clox_common_h
 

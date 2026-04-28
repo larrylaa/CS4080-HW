@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 14
+/*
+Ch.29 Q3: Initialized new owner/superclass/inner tables.
+See lines 31-32 and 49-51.
+*/
 #include <stdio.h>
 #include <string.h>
 
@@ -91,23 +96,9 @@ static ObjString* allocateString(char* chars, int length, uint32_t hash,
                                  bool ownsChars) {
   ObjString* string = (ObjString*)allocateObject(sizeof(ObjString), OBJ_STRING);
   string->length = length;
-  string->hash = hash;
-#if CLOX_SMALL_STRING_OBJ
-  if (length < (int)sizeof(string->inlineChars)) {
-    memcpy(string->inlineChars, chars, (size_t)length + 1);
-    string->chars = string->inlineChars;
-    if (ownsChars) {
-      FREE_ARRAY(char, chars, length + 1);
-    }
-    string->ownsChars = false;
-  } else {
-    string->chars = chars;
-    string->ownsChars = ownsChars;
-  }
-#else
   string->chars = chars;
+  string->hash = hash;
   string->ownsChars = ownsChars;
-#endif
   push(OBJ_VAL(string));
   tableSet(&vm.strings, OBJ_VAL(string), NIL_VAL);
   pop();

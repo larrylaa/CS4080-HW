@@ -1,3 +1,13 @@
+// LARRY LA - CS 4080 - HW 15
+/*
+Ch.30 Q2: Small strings are copied into ObjString.inlineChars to avoid
+separate char-array heap allocation.
+See lines 90, 95-98.
+
+Example:
+Input: many short literals (e.g., "k001", "k002", ...).
+Output: same program behavior, fewer tiny allocations.
+*/
 #include <stdio.h>
 #include <string.h>
 

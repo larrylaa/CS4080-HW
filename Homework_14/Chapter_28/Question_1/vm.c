@@ -1,3 +1,12 @@
+// LARRY LA - CS 4080 - HW 14
+/*
+Ch.28 Q1: Cached init() on class to avoid constructor hash lookup.
+See lines 26-27, 125-133, 224-229, and 535-544.
+
+Example:
+Input: class P { init(a,b,c){} } repeat P(...) in loop.
+Output: same semantics with slightly lower avg runtime.
+*/
 #include <stdarg.h>
 #include <math.h>
 #include <stdio.h>
@@ -29,8 +38,6 @@
 
 VM vm;
 static bool callValue(Value callee, int argCount);
-static ObjString* cachedGlobalName = NULL;
-static int cachedGlobalSlot = -1;
 
 static void resetStack(void) {
   vm.stackTop = vm.stack;
@@ -65,17 +72,9 @@ static Value peek(int distance) {
 }
 
 static int resolveGlobalSlot(ObjString* name) {
-#if CLOX_GLOBAL_SLOT_CACHE
-  if (name == cachedGlobalName) return cachedGlobalSlot;
-#endif
   Value slotValue;
   if (!tableGet(&vm.globals, OBJ_VAL(name), &slotValue)) return -1;
-  int slot = (int)AS_NUMBER(slotValue);
-#if CLOX_GLOBAL_SLOT_CACHE
-  cachedGlobalName = name;
-  cachedGlobalSlot = slot;
-#endif
-  return slot;
+  return (int)AS_NUMBER(slotValue);
 }
 
 static bool isFalsey(Value value) {
@@ -137,21 +136,9 @@ static void defineMethod(ObjString* name) {
   if (IS_FUNCTION(method)) {
     method = OBJ_VAL(newClosure(AS_FUNCTION(method)));
   }
-  ObjClosure* closure = IS_CLOSURE(method) ? AS_CLOSURE(method) : NULL;
   ObjClass* klass = AS_CLASS(peek(1));
-  if (closure != NULL) {
-    closure->ownerClass = klass;
-    closure->methodName = name;
-  }
-
-  Value existing;
-  if (tableGet(&klass->methods, OBJ_VAL(name), &existing)) {
-    tableSet(&klass->innerMethods, OBJ_VAL(name), method);
-  } else {
-    tableSet(&klass->methods, OBJ_VAL(name), method);
-  }
-
-  if (name == vm.initString && IS_NIL(klass->initializer)) {
+  tableSet(&klass->methods, OBJ_VAL(name), method);
+  if (name == vm.initString) {
     klass->initializer = method;
   }
   pop();
@@ -216,61 +203,6 @@ static bool invokeFromClass(ObjClass* klass, ObjString* name, int argCount) {
       ? AS_CLOSURE(method)
       : newClosure(AS_FUNCTION(method));
   return call(closure, argCount);
-}
-
-static ObjClass* findInnerTargetClass(ObjClass* receiverClass,
-                                      ObjClass* ownerClass,
-                                      ObjString* name) {
-  ObjClass* chain[256];
-  int chainCount = 0;
-  ObjClass* cursor = receiverClass;
-  while (cursor != NULL && cursor != ownerClass && chainCount < 256) {
-    chain[chainCount++] = cursor;
-    cursor = cursor->superclass;
-  }
-  if (cursor != ownerClass) return NULL;
-
-  for (int i = chainCount - 1; i >= 0; i--) {
-    Value method;
-    if (tableGet(&chain[i]->innerMethods, OBJ_VAL(name), &method)) {
-      return chain[i];
-    }
-  }
-  return NULL;
-}
-
-static bool invokeInner(CallFrame* frame, ObjString* name) {
-  Value receiver = peek(0);
-  if (!IS_INSTANCE(receiver)) {
-    runtimeError("Only instances have methods.");
-    return false;
-  }
-  if (frame->closure == NULL || frame->closure->ownerClass == NULL) {
-    runtimeError("Can't use 'inner' outside of a method.");
-    return false;
-  }
-
-  ObjInstance* instance = AS_INSTANCE(receiver);
-  ObjClass* target = findInnerTargetClass(instance->klass,
-                                          frame->closure->ownerClass,
-                                          name);
-  if (target == NULL) {
-    pop();
-    push(NIL_VAL);
-    return true;
-  }
-
-  Value method;
-  if (!tableGet(&target->innerMethods, OBJ_VAL(name), &method)) {
-    pop();
-    push(NIL_VAL);
-    return true;
-  }
-
-  ObjClosure* closure = IS_CLOSURE(method)
-      ? AS_CLOSURE(method)
-      : newClosure(AS_FUNCTION(method));
-  return call(closure, 0);
 }
 
 static bool invoke(ObjString* name, int argCount) {
@@ -524,15 +456,6 @@ static InterpretResult run(void) {
         }
         break;
       }
-      case OP_INNER: {
-        ObjString* name = READ_STRING();
-        STORE_IP();
-        if (!invokeInner(frame, name)) {
-          return INTERPRET_RUNTIME_ERROR;
-        }
-        LOAD_FRAME();
-        break;
-      }
       case OP_PRINT: {
         printValue(pop());
         printf("\n");
@@ -625,7 +548,6 @@ static InterpretResult run(void) {
         }
         ObjClass* subclass = AS_CLASS(peek(0));
         ObjClass* parent = AS_CLASS(superclass);
-        subclass->superclass = parent;
         tableAddAll(&parent->methods, &subclass->methods);
         if (IS_NIL(subclass->initializer)) {
           subclass->initializer = parent->initializer;
@@ -838,8 +760,6 @@ static bool delFieldNative(int argCount, Value* args, Value* result) {
 
 void initVM(void) {
   resetStack();
-  cachedGlobalName = NULL;
-  cachedGlobalSlot = -1;
   initTable(&vm.globals);
   initValueArray(&vm.globalValues);
   initTable(&vm.strings);
@@ -865,8 +785,6 @@ void initVM(void) {
 }
 
 void freeVM(void) {
-  cachedGlobalName = NULL;
-  cachedGlobalSlot = -1;
   freeTable(&vm.globals);
   freeValueArray(&vm.globalValues);
   freeTable(&vm.strings);

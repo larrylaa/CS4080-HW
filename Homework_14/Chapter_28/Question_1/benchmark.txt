@@ -1,0 +1,26 @@
+LARRY LA - CS 4080 - HW 14
+Ch.28 Q1: Faster init() lookup
+
+Implementation:
+- Added `initializer` cache on `ObjClass`.
+- Set cache when method name is `init`.
+- Constructor calls use cached initializer instead of hash lookup.
+- Inheritance copies initializer cache from superclass.
+
+Code refs:
+- object.h:70-74
+- object.c:44-48
+- vm.c:26-27, 125-133, 224-229, 535-544
+
+Benchmark:
+- Script: /tmp/hw14_ch28q1_bench.lox (200000 constructions)
+- fast avg (cache on): 0.233818 s
+- base avg (cache off): 0.235145 s
+- Improvement: ~0.56% on this benchmark
+
+I/O example:
+Input:
+class K { init(x){ this.x = x; } val(){ print this.x; } }
+K(42).val();
+Output:
+42

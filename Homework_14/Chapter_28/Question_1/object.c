@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 14
+/*
+Ch.28 Q1: Initialized class initializer cache to nil.
+See lines 44-48.
+*/
 #include <stdio.h>
 #include <string.h>
 
@@ -28,8 +33,6 @@ ObjClosure* newClosure(ObjFunction* function) {
   ObjClosure* closure = (ObjClosure*)allocateObject(sizeof(ObjClosure),
                                                     OBJ_CLOSURE);
   closure->function = function;
-  closure->ownerClass = NULL;
-  closure->methodName = NULL;
   closure->upvalues = upvalues;
   closure->upvalueCount = function->upvalueCount;
   return closure;
@@ -46,9 +49,7 @@ ObjBoundMethod* newBoundMethod(Value receiver, ObjClosure* method) {
 ObjClass* newClass(ObjString* name) {
   ObjClass* klass = (ObjClass*)allocateObject(sizeof(ObjClass), OBJ_CLASS);
   klass->name = name;
-  klass->superclass = NULL;
   initTable(&klass->methods);
-  initTable(&klass->innerMethods);
   klass->initializer = NIL_VAL;
   return klass;
 }
@@ -91,23 +92,9 @@ static ObjString* allocateString(char* chars, int length, uint32_t hash,
                                  bool ownsChars) {
   ObjString* string = (ObjString*)allocateObject(sizeof(ObjString), OBJ_STRING);
   string->length = length;
-  string->hash = hash;
-#if CLOX_SMALL_STRING_OBJ
-  if (length < (int)sizeof(string->inlineChars)) {
-    memcpy(string->inlineChars, chars, (size_t)length + 1);
-    string->chars = string->inlineChars;
-    if (ownsChars) {
-      FREE_ARRAY(char, chars, length + 1);
-    }
-    string->ownsChars = false;
-  } else {
-    string->chars = chars;
-    string->ownsChars = ownsChars;
-  }
-#else
   string->chars = chars;
+  string->hash = hash;
   string->ownsChars = ownsChars;
-#endif
   push(OBJ_VAL(string));
   tableSet(&vm.strings, OBJ_VAL(string), NIL_VAL);
   pop();

@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 14
+/*
+Ch.29 Q3: Disassembler support for OP_INNER.
+See lines 115-116.
+*/
 #include <stdio.h>
 
 #include "debug.h"

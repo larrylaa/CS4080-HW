@@ -1,0 +1,28 @@
+LARRY LA - CS 4080 - HW 15
+Ch.30 Q1 Benchmark (global lookup cache)
+
+Build flags:
+- fast: CLOX_GLOBAL_SLOT_CACHE=1
+- base: CLOX_GLOBAL_SLOT_CACHE=0
+- both built with -O2 -DDEBUG_TRACE_EXECUTION=0 -DDEBUG_PRINT_CODE=0
+
+Benchmark script:
+var x = 1;
+var i = 0;
+var sum = 0;
+var t0 = clock();
+while (i < 20000000) {
+  sum = sum + x;
+  i = i + 1;
+}
+print sum;
+print clock() - t0;
+
+Runs (seconds):
+- fast: 1.35925, 1.42286, 1.32506
+- base: 1.40610, 1.36274, 1.46528
+
+Averages:
+- fast avg: 1.36906
+- base avg: 1.41137
+- speedup: ~3.0%

@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 14
+/*
+Ch.28 Q1: Added per-class cached initializer slot.
+See lines 70-74.
+*/
 #ifndef clox_object_h
 #define clox_object_h
 
@@ -70,9 +75,7 @@ struct ObjBoundMethod {
 struct ObjClass {
   Obj obj;
   ObjString* name;
-  struct ObjClass* superclass;
   Table methods;
-  Table innerMethods;
   Value initializer;
 };
 
@@ -85,8 +88,6 @@ struct ObjInstance {
 struct ObjClosure {
   Obj obj;
   ObjFunction* function;
-  ObjClass* ownerClass;
-  ObjString* methodName;
   ObjUpvalue** upvalues;
   int upvalueCount;
 };
@@ -105,7 +106,6 @@ struct ObjString {
   char* chars;
   uint32_t hash;
   bool ownsChars;
-  char inlineChars[16];
 };
 
 struct ObjUpvalue {

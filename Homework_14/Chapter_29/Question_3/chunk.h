@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 14
+/*
+Ch.29 Q3: Added OP_INNER bytecode for BETA inner dispatch.
+See line 29.
+*/
 #ifndef clox_chunk_h
 #define clox_chunk_h
 

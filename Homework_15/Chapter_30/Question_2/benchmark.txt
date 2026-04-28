@@ -1,0 +1,16 @@
+LARRY LA - CS 4080 - HW 15
+Ch.30 Q2 Benchmark (small string object optimization)
+
+Build flags:
+- fast: CLOX_SMALL_STRING_OBJ=1
+- base: CLOX_SMALL_STRING_OBJ=0
+- both built with -O2 -DDEBUG_TRACE_EXECUTION=0 -DDEBUG_PRINT_CODE=0
+
+Benchmark setup:
+- Script with 60 unique short string literals (`"k000"` ... `"k059"`).
+- Run interpreter 1000 times and measure total wall time.
+
+Results:
+- fast total: 2.08 s
+- base total: 2.19 s
+- speedup: ~5.0%

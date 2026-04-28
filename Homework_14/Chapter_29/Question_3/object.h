@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 14
+/*
+Ch.29 Q3: Added class-chain/inner metadata for BETA semantics.
+See lines 73, 75, 88-89.
+*/
 #ifndef clox_object_h
 #define clox_object_h
 
@@ -105,7 +110,6 @@ struct ObjString {
   char* chars;
   uint32_t hash;
   bool ownsChars;
-  char inlineChars[16];
 };
 
 struct ObjUpvalue {

@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 14
+/*
+Ch.29 Q3: Added TOKEN_INNER keyword support for BETA-style inner().
+See line 22.
+*/
 #ifndef clox_scanner_h
 #define clox_scanner_h
 

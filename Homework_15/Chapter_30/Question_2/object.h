@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 15
+/*
+Ch.30 Q2: ObjString now has inline storage for tiny strings.
+See line 108.
+*/
 #ifndef clox_object_h
 #define clox_object_h
 

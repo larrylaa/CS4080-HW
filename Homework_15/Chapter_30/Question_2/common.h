@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 15
+/*
+Ch.30 Q2: Added small-string object optimization toggle.
+See lines 32-33.
+*/
 #ifndef clox_common_h
 #define clox_common_h
 

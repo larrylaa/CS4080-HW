@@ -1,3 +1,12 @@
+// LARRY LA - CS 4080 - HW 15
+/*
+Ch.30 Q1: Optimized global lookup with 1-entry inline cache.
+See lines 32, 67-75, 839-841, 867-868.
+
+Example:
+Input: tight loop repeatedly reading global `x`.
+Output: same result with lower runtime.
+*/
 #include <stdarg.h>
 #include <math.h>
 #include <stdio.h>

@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 14
+/*
+Ch.29 Q3: GC/reference tracking extended for inner metadata.
+See lines 234, 238, 243-244, 502, 504, 510-511, 635.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

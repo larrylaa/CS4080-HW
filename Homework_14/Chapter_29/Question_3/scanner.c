@@ -1,3 +1,8 @@
+// LARRY LA - CS 4080 - HW 14
+/*
+Ch.29 Q3: Scanner recognizes 'inner' keyword.
+See lines 189-193.
+*/
 #include <string.h>
 
 #include "common.h"
